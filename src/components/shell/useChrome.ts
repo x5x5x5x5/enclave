@@ -26,3 +26,21 @@ export function useChrome() {
     else delete document.documentElement.dataset.motion
   }, [motion])
 }
+
+/**
+ * Atmospheres reshape the shell per space. Setting the attribute swaps a whole
+ * token set (type sizes, list density, chrome opacity, column width), so no
+ * component needs to know which kind of room it is standing in.
+ */
+export function useAtmosphere(atmosphere: 'hall' | 'studio' | 'salon' | undefined) {
+  useEffect(() => {
+    if (!atmosphere) {
+      delete document.documentElement.dataset.atmosphere
+      return
+    }
+    document.documentElement.dataset.atmosphere = atmosphere
+    return () => {
+      delete document.documentElement.dataset.atmosphere
+    }
+  }, [atmosphere])
+}

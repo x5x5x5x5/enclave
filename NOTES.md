@@ -61,3 +61,46 @@ produces it — channels come from `Community.channels`. `RoomRef.kind` is
 
 **P0 gate:** `tsc -b`, `eslint .` and `vite build` all clean; playground verified at 1440 and 390;
 mask switch confirmed to re-tint (`data-mask-hue="fog"` drains `--accent` to `rgb(143 160 179)`).
+
+---
+
+## P1 — Conversation core
+
+**Two stream layouts, chosen by room kind.** Channels and groups render as a dense stream
+(avatar gutter, author name, Discord-style scanning); direct messages render as bubbles with own
+messages aligned right (Telegram-style intimacy). The design system asks for both densities
+deliberately, and the room kind is the honest place to switch between them. The message *content*
+block is shared, so every state renders identically in both.
+
+**Media is drawn, not fetched.** `components/messaging/MediaArt` turns any seed into a
+deterministic abstract composition (five layout variants, two mask hues, a dark scrim). Grey
+placeholder rectangles would have made every media state — blurred, view-once, hold-to-view,
+watch-budget — read as "unimplemented" in a screenshot.
+
+**Hold-to-view is a real press.** `pointerdown` reveals, `pointerup` / `pointerleave` re-covers,
+and space bar does the same for keyboard users. It is the one interaction in the product that
+cannot be faked with a click.
+
+**The Horizon is unconditional in retention rooms**, and the ghost-history note now renders
+alongside it rather than instead of it. `#annotations` is both a 7-day retention room *and* a
+from-join room, and hiding one fact behind the other lost information.
+
+**Watch-budget copy counts down, not up.** It reads "0:22 of 0:30 left", matching the spec: the
+number that matters is what you have left, not what you have spent.
+
+**`TransferCard` landed in P1 rather than P3.** `#raids` and the Mira DM both carry large
+attachments in the fixtures, and a stub would have been a dead surface at the P1 gate. All four
+states (direct, relay fallback, paused/resumable, failed) exist; P3 adds the discovery of them from
+the attach picker.
+
+**Report from the ⋯ menu is a "later" toast in P1** and becomes the real flow in P3, when
+in-stream multi-select exists. Every other action in that menu works now.
+
+**Transfers advance on a shell-level interval**, not per-card, so a file keeps moving while you are
+in another room — which is the entire point of a resumable transfer.
+
+**P1 gate:** typecheck, lint and build clean. Every fixture state in `#raids` renders distinctly
+(verified from the live DOM): Horizon, aged messages, reply quote, media grid, blurred preview,
+view-once cover, expired tombstone, hold-to-view, watch budget, burn-after-listen voice note,
+"View in app only" attachment, direct transfer, undo window, scheduled section. Palette is fully
+keyboard navigable (arrows, enter, escape).

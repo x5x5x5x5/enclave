@@ -283,3 +283,9 @@
   box-shadow: 0 0 0 1px var(--line);
   cursor: pointer;
 }
+
+/* Salon: chrome recedes until you reach for it. The hush. */
+[data-atmosphere='salon'] .atm-chrome:hover,
+[data-atmosphere='salon'] .atm-chrome:focus-within {
+  opacity: 1;
+}
