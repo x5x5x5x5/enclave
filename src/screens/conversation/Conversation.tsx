@@ -20,6 +20,7 @@ import { Countdown, RetentionChip } from '../../components/time'
 import { BreachBanner, FuzzedCount, SealBadge } from '../../components/trust'
 import { GhostGlyph } from '../../components/trust/Glyphs'
 import { MemberPanel } from './MemberPanel'
+import { ReportFlow, ReportSelectionBar } from '../moderation/ReportFlow'
 
 export function Conversation({ roomId, backTo }: { roomId: string; backTo: string }) {
   const navigate = useNavigate()
@@ -31,6 +32,8 @@ export function Conversation({ roomId, backTo }: { roomId: string; backTo: strin
   const openOverlay = useUi((s) => s.openOverlay)
   const activeMaskId = useApp((s) => s.activeMaskId)
   const typingIn = useWorld((s) => s.typingIn)
+  const report = useUi((s) => s.report)
+  const toggleReportSelection = useUi((s) => s.toggleReportSelection)
   const overlay = useUi((s) => s.overlay)
   const closeOverlay = useUi((s) => s.closeOverlay)
   const panelOpen = rightPanel !== null
@@ -52,6 +55,7 @@ export function Conversation({ roomId, backTo }: { roomId: string; backTo: strin
   const isAnnounce = room.kind === 'announce'
   const isDm = room.kind === 'dm'
   const isStaffChannel = room.history === 'none'
+  const reporting = report?.roomId === roomId && report.step === 1
 
   return (
     <div className="flex min-h-0 min-w-0 flex-1">
@@ -147,19 +151,24 @@ export function Conversation({ roomId, backTo }: { roomId: string; backTo: strin
           layout={isDm ? 'bubbles' : 'stream'}
           retention={room.retention}
           history={room.history}
+          selectable={reporting}
+          selectedIds={report?.selected}
+          onSelect={toggleReportSelection}
           typingMaskId={
             typingIn === roomId ? room.memberMaskIds?.[0] : undefined
           }
         />
 
-        {isRequest ? (
+        <ReportSelectionBar />
+
+        {reporting ? null : isRequest ? (
           <div className="shrink-0 px-4 py-3 hairline-t">
             <div className="rounded-card border border-[var(--line)] bg-ink-1 p-3">
               <p className="text-13 text-hi">
                 Accept this request to allow messages from{' '}
                 {maskById(room.requestFromMaskId ?? '').handle}.
               </p>
-              <p className="mt-1 text-12 leading-relaxed text-low">
+              <p className="mt-1 text-12 leading-relaxed text-mid">
                 They see nothing about you until you do. Declining tells them nothing either.
               </p>
               <div className="mt-3 flex gap-2">
@@ -211,6 +220,8 @@ export function Conversation({ roomId, backTo }: { roomId: string; backTo: strin
           <MemberPanel roomId={roomId} />
         </aside>
       ) : null}
+
+      <ReportFlow />
 
       <Sheet
         open={overlay === 'room-details'}

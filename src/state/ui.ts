@@ -26,8 +26,16 @@ export type OverlayId =
   | 'ember-picker'
   | 'schedule'
 
+export interface ReportDraft {
+  roomId: string
+  step: 1 | 2 | 3
+  selected: string[]
+  reason?: string
+}
+
 interface UiState {
   toasts: Toast[]
+  report: ReportDraft | null
   overlay: OverlayId | null
   overlayPayload: unknown
   rightPanel: 'members' | 'thread' | 'profile' | null
@@ -43,12 +51,19 @@ interface UiState {
 
   setRightPanel: (p: UiState['rightPanel']) => void
   setMobileNav: (open: boolean) => void
+
+  startReport: (roomId: string, seedMessageId?: string) => void
+  toggleReportSelection: (messageId: string) => void
+  setReportStep: (step: 1 | 2 | 3) => void
+  setReportReason: (reason: string) => void
+  cancelReport: () => void
 }
 
 let toastSeq = 0
 
 export const useUi = create<UiState>((set, get) => ({
   toasts: [],
+  report: null,
   overlay: null,
   overlayPayload: undefined,
   rightPanel: 'members',
@@ -77,4 +92,27 @@ export const useUi = create<UiState>((set, get) => ({
 
   setRightPanel: (p) => set({ rightPanel: p }),
   setMobileNav: (open) => set({ mobileNav: open }),
+
+  /* Reporting starts in the stream: you pick the exact messages mods will see. */
+  startReport: (roomId, seedMessageId) =>
+    set({
+      report: { roomId, step: 1, selected: seedMessageId ? [seedMessageId] : [] },
+      overlay: null,
+    }),
+  toggleReportSelection: (messageId) =>
+    set((s) =>
+      s.report
+        ? {
+            report: {
+              ...s.report,
+              selected: s.report.selected.includes(messageId)
+                ? s.report.selected.filter((id) => id !== messageId)
+                : [...s.report.selected, messageId],
+            },
+          }
+        : {},
+    ),
+  setReportStep: (step) => set((s) => (s.report ? { report: { ...s.report, step } } : {})),
+  setReportReason: (reason) => set((s) => (s.report ? { report: { ...s.report, reason } } : {})),
+  cancelReport: () => set({ report: null }),
 }))

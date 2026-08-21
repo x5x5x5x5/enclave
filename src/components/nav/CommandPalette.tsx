@@ -6,6 +6,7 @@ import {
   Hash,
   Radio,
   Search,
+  ShieldCheck,
   Sparkles,
   UserSquare,
   Vault as VaultIcon,
@@ -163,6 +164,14 @@ export function CommandPalette() {
               : 'Fake activity every few seconds. Everything is reversible.',
           })
         },
+      },
+      {
+        id: 'ac-mod',
+        section: 'Actions',
+        label: 'Open the mod queue',
+        hint: 'LostEra staff',
+        icon: <ShieldCheck size={15} strokeWidth={1.5} />,
+        run: () => navigate('/mod'),
       },
       {
         id: 'ac-playground',

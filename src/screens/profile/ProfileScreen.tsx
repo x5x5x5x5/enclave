@@ -196,7 +196,7 @@ export function ProfileScreen() {
                 <span className="mono-num shrink-0 text-12 text-low">{s.note}</span>
               </li>
             ))}
-            <li className="pt-1 text-12 leading-relaxed text-low">
+            <li className="pt-1 text-12 leading-relaxed text-mid">
               Only spaces you marked public are listed. The rest are not hidden — they are simply
               not knowable from here.
             </li>

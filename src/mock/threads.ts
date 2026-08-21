@@ -112,7 +112,8 @@ export const CHAT_ROWS: ChatRow[] = [
     avatarMaskId: 'p-vex',
     sealed: true,
     folder: 'dms',
-    groupMaskIds: ['p-vex', 'p-pixel', 'p-lark'],
+    groupMaskIds: ['p-vex', 'p-pixel', 'p-lark', 'p-rho', 'p-anselme'],
+    memberNote: '11 members',
   },
   {
     id: 'row-ops',
@@ -125,6 +126,7 @@ export const CHAT_ROWS: ChatRow[] = [
     folder: 'dms',
     ember: { remainingMs: 5 * DAY, totalMs: 7 * DAY },
     groupMaskIds: ['p-konstantin', 'm-aija'],
+    memberNote: '4 members',
   },
   {
     id: 'row-konstantin',

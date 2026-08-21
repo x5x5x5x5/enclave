@@ -188,7 +188,7 @@ export function Composer({
                   )
                 })}
               </div>
-              <p className="px-2 pb-1 pt-1 text-12 leading-relaxed text-low">
+              <p className="px-2 pb-1 pt-1 text-12 leading-relaxed text-mid">
                 Everyone in the room sees the same countdown. Nobody gets a quiet copy.
               </p>
             </div>

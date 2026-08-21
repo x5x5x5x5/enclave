@@ -38,7 +38,7 @@ export function MaskSwitcher({ scopeWarning }: { scopeWarning?: string }) {
       size="md"
       footer={
         <>
-          <p className="mr-auto max-w-64 text-12 leading-relaxed text-low">{BRAND.maskNote}</p>
+          <p className="mr-auto max-w-64 text-12 leading-relaxed text-mid">{BRAND.maskNote}</p>
           <Button
             variant="outline"
             size="sm"

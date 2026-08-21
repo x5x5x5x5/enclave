@@ -71,7 +71,7 @@ export function Field({
     <label className={cx('flex flex-col gap-1.5', className)}>
       <span className="text-13 font-medium text-mid">{label}</span>
       {children}
-      {hint ? <span className="text-12 leading-relaxed text-low">{hint}</span> : null}
+      {hint ? <span className="text-12 leading-relaxed text-mid">{hint}</span> : null}
     </label>
   )
 }

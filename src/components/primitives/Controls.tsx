@@ -60,7 +60,7 @@ export function Toggle({
           {label}
         </label>
         {description ? (
-          <p className="mt-0.5 text-12 leading-relaxed text-low">{description}</p>
+          <p className="mt-0.5 text-12 leading-relaxed text-mid">{description}</p>
         ) : null}
       </div>
       {control}

@@ -51,7 +51,7 @@ export function MemberPanel({ roomId }: { roomId: string }) {
             </div>
           ))}
         </div>
-        <footer className="shrink-0 px-3 py-2.5 text-12 leading-relaxed text-low hairline-t">
+        <footer className="shrink-0 px-3 py-2.5 text-12 leading-relaxed text-mid hairline-t">
           Everyone here is shown as the mask this space knows. Nothing links back to another space.
         </footer>
       </div>
@@ -70,7 +70,7 @@ export function MemberPanel({ roomId }: { roomId: string }) {
         ))}
       </div>
       {room?.headerNote ? (
-        <footer className="shrink-0 px-3 py-2.5 text-12 leading-relaxed text-low hairline-t">
+        <footer className="shrink-0 px-3 py-2.5 text-12 leading-relaxed text-mid hairline-t">
           {room.headerNote}.
         </footer>
       ) : null}

@@ -167,7 +167,7 @@ export function SocialCard() {
           </div>
         </div>
 
-        <p className="text-center text-12 leading-relaxed text-low">
+        <p className="text-center text-12 leading-relaxed text-mid">
           {anonymous
             ? 'The anonymous card hides the handle. Scanning starts a request, not a lookup.'
             : 'This card only shows what this mask already shows in public.'}

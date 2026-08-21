@@ -161,7 +161,7 @@ export function StoryComposer() {
               )}
             </Popover>
           </div>
-          <p className="mt-1.5 text-12 leading-relaxed text-low">
+          <p className="mt-1.5 text-12 leading-relaxed text-mid">
             Only this mask is shown. Nobody outside this audience can tell the story exists.
           </p>
         </div>

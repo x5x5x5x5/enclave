@@ -150,3 +150,55 @@ ring, waveform, relay chip, mono latency, occupant spill). Social Card exports a
 `html-to-image` across all four templates. Switching LostEra → The Reading Room visibly reshapes
 the shell (verified: `data-atmosphere="salon"`, 17px/1.7 body, 680px column, chrome 0.4, no channel
 column).
+
+---
+
+## P3 — Sovereignty
+
+**Reporting starts in the stream, not in a modal.** The whole point of the flow is that you choose
+exactly what a moderator sees, so step 1 puts the conversation into selection mode with a bar under
+it; steps 2 and 3 are a modal. `ReportDraft` lives in the UI store so the stream and the modal stay
+in sync without prop drilling through the shell.
+
+**The mod queue leads with "0 reports opened without proof."** It is a policy stated as a number,
+which is the most Enclave way to say it. Every card shows a per-message franking hash and a
+"proof verified" chip, and the copy says out loud that the excerpts are all the mods can see.
+
+**Settings has no section-less state on desktop and a real one on mobile.** `/settings` shows the
+nav on a phone and Masks in the pane on a desktop, rather than redirecting and stranding phone
+users in a section with no way back to the list.
+
+**Sweep confirms with the true sentence, not a comfortable one.** "Deletes your messages everywhere
+it is allowed. Others' copies of sealed rooms expire by key rotation." The modal does not promise
+reach it does not have.
+
+**Duress mode cannot be armed until the two passwords differ**, and the confirm modal says there is
+no recovery path from inside the decoy. Presenting that as the feature rather than a caveat is the
+honest framing.
+
+**Onboarding's hue picker calls `crossfadeAccent` directly.** It runs outside the app shell, so
+there is no `useChrome` to drive the tint; picking a hue there is the first taste of the signature
+and it should animate exactly the way the real switch does.
+
+**Two real defects found by auditing the running app rather than by reading it:**
+
+1. *Invalid DOM nesting.* `MaskAvatar` rendered a `<div>`, and avatars sit inside `<p>` labels,
+   tooltips and chips. React was warning on `/settings/notifications`. The wrapper is now a `<span>`
+   with `display: block`, which is identical visually and valid everywhere. Verified 0 hits for
+   `p div`, `span div`, `button button` across every route.
+2. *Contrast.* `--text-low` (#5E6877) measures 3.4:1 on the app canvas — under the design system's
+   own 4.5:1 floor for body text. The token is specified in §2 and the floor is specified in §9, so
+   they only agree if `--text-low` is never body text. Rather than change a token that is law, every
+   explanatory paragraph (24 of them, all marked `leading-relaxed`) moved to `--text-mid`, which
+   measures 7.4:1 on the canvas and 6.5:1 on raised surfaces. `--text-low` now carries only
+   timestamps, hashes, counts and micro-labels — genuinely tertiary material.
+
+**Route sweep:** all 37 routes render with no runtime errors and no blank screens; the two thin
+pages are the deliberately empty `Standup` voice room and the 404.
+
+**Demo mode verified reversible in the running app:** toggling on drips events into `#raids`
+(confirmed a new message appearing); toggling off restores the world to its exact prior state
+(confirmed the message gone and the DOM back to its original size).
+
+**P3 gate:** typecheck, lint and build clean; five-minute click-through with zero dead ends — every
+out-of-scope control raises the "comes in a later phase" toast rather than doing nothing.

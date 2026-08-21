@@ -36,14 +36,16 @@ export function MaskAvatar({
   // which of your masks is dark, even when nobody else does.
   const invisible = m.presence === 'invisible'
 
-  const Wrapper = onClick ? 'button' : 'div'
+  // A span, not a div: avatars sit inside <p> labels, tooltips and chips, and
+  // a div there is invalid nesting. `block` keeps the layout identical.
+  const Wrapper = onClick ? 'button' : 'span'
 
   return (
     <Wrapper
       onClick={onClick}
       title={title ?? m.displayName}
       aria-label={onClick ? `${m.displayName} ${m.handle}` : undefined}
-      className={cx('relative shrink-0', onClick && 'cursor-pointer', className)}
+      className={cx('relative block shrink-0', onClick && 'cursor-pointer', className)}
       style={{ width: size, height: size }}
     >
       <span

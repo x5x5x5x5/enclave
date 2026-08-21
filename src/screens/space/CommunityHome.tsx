@@ -1,11 +1,12 @@
 import { useNavigate } from 'react-router-dom'
-import { CalendarClock, Volume2 } from 'lucide-react'
+import { CalendarClock, ShieldCheck, Volume2 } from 'lucide-react'
 import { cx } from '../../lib/cx'
 import { clock } from '../../lib/time'
 import { maskById } from '../../mock/masks'
 import type { Community } from '../../mock/types'
 import { useUi } from '../../state/ui'
 import { useWorld } from '../../state/world'
+import { Button } from '../../components/primitives/Button'
 import { Card, SectionLabel } from '../../components/primitives/EmptyState'
 import { Chip } from '../../components/primitives/Chip'
 import { MaskAvatar } from '../../components/identity/MaskAvatar'
@@ -73,12 +74,24 @@ export function CommunityHome({ community }: { community: Community }) {
                 prefix="you are here as"
                 onClick={() => openOverlay('mask-switcher')}
               />
-              <span className="text-12 leading-relaxed text-low">
+              <span className="text-12 leading-relaxed text-mid">
                 Changing your mask here starts a fresh, unlinked profile.
               </span>
             </div>
 
             <p className="mt-4 text-12 text-low">{ATMOSPHERE_NOTE[community.atmosphere]}</p>
+
+            {community.staff ? (
+              <Button
+                variant="quiet"
+                size="sm"
+                className="mt-4"
+                icon={<ShieldCheck size={15} strokeWidth={1.5} />}
+                onClick={() => navigate('/mod')}
+              >
+                Open the mod queue
+              </Button>
+            ) : null}
           </header>
 
           {scheduled.length > 0 ? (

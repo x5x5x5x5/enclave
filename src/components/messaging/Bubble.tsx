@@ -39,7 +39,7 @@ function TranslateStack({ message }: { message: Message }) {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2, ease: [0.2, 0, 0, 1] }}
-            className="overflow-hidden border-l border-[var(--line)] pl-2.5 pt-1 text-13 italic leading-relaxed text-low"
+            className="overflow-hidden border-l border-[var(--line)] pl-2.5 pt-1 text-13 italic leading-relaxed text-mid"
           >
             {t.body}
           </motion.p>
@@ -85,6 +85,7 @@ function MessageActions({ message }: { message: Message }) {
   const later = useUi((s) => s.later)
   const toast = useUi((s) => s.toast)
   const saveToVault = useWorld((s) => s.saveToVault)
+  const startReport = useUi((s) => s.startReport)
 
   const item =
     'flex w-full items-center gap-2 rounded-chip px-2 py-1.5 text-13 text-mid transition-colors hover:bg-ink-3 hover:text-hi'
@@ -129,7 +130,13 @@ function MessageActions({ message }: { message: Message }) {
           >
             <ShieldCheck size={14} strokeWidth={1.5} /> Copy proof
           </button>
-          <button className={item} onClick={() => { close(); later('Reporting') }}>
+          <button
+            className={item}
+            onClick={() => {
+              close()
+              startReport(message.channelId, message.id)
+            }}
+          >
             <Flag size={14} strokeWidth={1.5} /> Report
           </button>
           <div className="mt-1 border-t border-[var(--line-soft)] px-2 pt-1.5">

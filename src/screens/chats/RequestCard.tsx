@@ -36,7 +36,7 @@ export function RequestCard({ row }: { row: ChatRow }) {
             </span>
           </div>
           <p className="mt-1 text-13 leading-relaxed text-mid">{row.snippet}</p>
-          <p className="mt-1.5 text-12 leading-relaxed text-low">
+          <p className="mt-1.5 text-12 leading-relaxed text-mid">
             Accept request to allow messages. Until then they cannot see your presence, your spaces,
             or whether you read this.
           </p>

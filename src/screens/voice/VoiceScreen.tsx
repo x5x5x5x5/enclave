@@ -176,7 +176,7 @@ export function VoiceScreen() {
               {room ? <RelayChip relay={room.relay} /> : null}
             </div>
           </div>
-          <p className="text-12 leading-relaxed text-low">
+          <p className="text-12 leading-relaxed text-mid">
             IPs are not shared between participants.
           </p>
         </div>

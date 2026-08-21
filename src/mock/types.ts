@@ -224,6 +224,7 @@ export interface ChatRow {
   murmur?: number
   typing?: boolean
   groupMaskIds?: string[]
+  memberNote?: string
 }
 
 export interface DiscoverySpace {

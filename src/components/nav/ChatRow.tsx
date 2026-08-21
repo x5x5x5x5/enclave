@@ -22,7 +22,7 @@ export function ChatRow({ row, to, active }: { row: ChatRowData; to: string; act
     >
       <div className="relative shrink-0">
         {row.groupMaskIds?.length ? (
-          <MaskStack maskIds={row.groupMaskIds} size={22} max={2} />
+          <MaskStack maskIds={row.groupMaskIds} size={22} max={3} />
         ) : (
           <MaskAvatar maskId={row.avatarMaskId} size={36} />
         )}
@@ -37,6 +37,9 @@ export function ChatRow({ row, to, active }: { row: ChatRowData; to: string; act
           >
             {row.title}
           </span>
+          {row.memberNote ? (
+            <span className="mono-num shrink-0 text-12 text-low">{row.memberNote}</span>
+          ) : null}
           {row.sealed ? (
             <span className="shrink-0 text-low" title="Sealed">
               <SealGlyph size={12} />
