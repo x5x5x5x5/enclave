@@ -5,6 +5,7 @@ import { CHAT_ROWS } from '../../mock/threads'
 import { useUi } from '../../state/ui'
 import { useWorld } from '../../state/world'
 import { ChatRow } from '../../components/nav/ChatRow'
+import { StoriesRail } from '../../components/social/StoriesRail'
 import { EmptyState } from '../../components/primitives/EmptyState'
 import { IconButton } from '../../components/primitives/Button'
 import { Input } from '../../components/primitives/Input'
@@ -118,7 +119,7 @@ export function ChatsScreen() {
           />
         </header>
 
-        {/* Stories rail lands in P2, directly above the folder tabs. */}
+        <StoriesRail />
 
         <Tabs
           className="shrink-0 px-2"

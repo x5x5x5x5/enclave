@@ -1,21 +1,30 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+import { useReducedMotion } from 'framer-motion'
+import { crossfadeAccent } from '../../lib/tint'
 import { maskById } from '../../mock/masks'
+import type { Hue } from '../../mock/types'
 import { useApp } from '../../state/app'
 
 /**
  * The mask tint mechanism, in one place: the active mask's hue is written to
- * <html data-mask-hue>, and every --accent-* token follows it. Density and the
+ * <html data-mask-hue>, and every --accent-* token follows it. The 250ms
+ * crossfade between two hues is driven in `lib/tint`. Density and the
  * reduced-motion override ride along on the same element.
  */
 export function useChrome() {
   const activeMaskId = useApp((s) => s.activeMaskId)
   const density = useApp((s) => s.density)
   const motion = useApp((s) => s.motion)
+  const systemReduce = useReducedMotion()
+  const previousHue = useRef<Hue | null>(null)
+
+  const reduce = motion === 'reduced' || !!systemReduce
 
   useEffect(() => {
     const hue = maskById(activeMaskId).hue
-    document.documentElement.dataset.maskHue = hue
-  }, [activeMaskId])
+    crossfadeAccent(previousHue.current, hue, reduce)
+    previousHue.current = hue
+  }, [activeMaskId, reduce])
 
   useEffect(() => {
     document.documentElement.dataset.density = density

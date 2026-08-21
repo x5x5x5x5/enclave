@@ -124,12 +124,30 @@ export const AUDIENCE_VISIBILITY: Record<AudienceId, string[]> = {
   lostera: ['about', 'badges', 'projects', 'spaces', 'aura', 'reputation'],
 }
 
-/** The mask each audience actually knows you as. */
-export const AUDIENCE_MASK: Record<AudienceId, string> = {
-  self: 'm-aija',
-  stranger: 'm-aija',
-  contact: 'm-aija',
-  lostera: 'm-aija',
+/**
+ * What each audience actually knows. `maskId: 'active'` means "the mask you are
+ * currently wearing"; a real id means that context only ever knew that one.
+ */
+export const AUDIENCE_KNOWS: Record<
+  AudienceId,
+  { maskId: string; showHandle: boolean; note: string }
+> = {
+  self: { maskId: 'active', showHandle: true, note: 'Everything, including hidden blocks.' },
+  stranger: {
+    maskId: 'active',
+    showHandle: false,
+    note: 'No handle, no spaces, no links. They can send a request and nothing else.',
+  },
+  contact: {
+    maskId: 'active',
+    showHandle: true,
+    note: 'A handle and the blocks you share with people you have accepted.',
+  },
+  lostera: {
+    maskId: 'm-aija',
+    showHandle: true,
+    note: 'LostEra only ever met Aija. Your other masks do not exist here.',
+  },
 }
 
 export const SOCIAL_CARD_TEMPLATES = [

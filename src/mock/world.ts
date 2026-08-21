@@ -13,7 +13,14 @@ export { VAULT, VAULT_TABS } from './vault'
 export { VOICE_ROOMS, voiceRoom } from './voice'
 export { DISCOVERY, DISCOVERY_CATEGORIES } from './discovery'
 export { MOD_REPORTS, REPORT_REASONS } from './moderation'
-export { SOCIAL, PROFILE_BLOCKS, AUDIENCES, AUDIENCE_VISIBILITY, SOCIAL_CARD_TEMPLATES } from './social'
+export {
+  SOCIAL,
+  PROFILE_BLOCKS,
+  AUDIENCES,
+  AUDIENCE_VISIBILITY,
+  AUDIENCE_KNOWS,
+  SOCIAL_CARD_TEMPLATES,
+} from './social'
 export { ACTIVITY_SCRIPT, delayForIndex } from './activity'
 
 export const HUES: Hue[] = ['cove', 'iris', 'saffron', 'rose', 'moss', 'sky', 'clay', 'fog']

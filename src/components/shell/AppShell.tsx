@@ -5,6 +5,8 @@ import { CommandPalette } from '../nav/CommandPalette'
 import { MobileTabs } from '../nav/MobileTabs'
 import { Rail } from '../nav/Rail'
 import { ToastHost } from '../primitives/Toast'
+import { StoryViewer } from '../social/StoryViewer'
+import { StoryComposer } from '../social/StoryComposer'
 import { useUi } from '../../state/ui'
 import { useWorld } from '../../state/world'
 import { useChrome } from './useChrome'
@@ -57,6 +59,8 @@ export function AppShell() {
       <MobileTabs />
       <MaskSwitcher />
       <CommandPalette />
+      <StoryViewer />
+      <StoryComposer />
       <ToastHost />
     </div>
   )

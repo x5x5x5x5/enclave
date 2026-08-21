@@ -165,14 +165,13 @@
   --atm-stream-pad: 32px;
 }
 
-/* ---- Mask hue aliases -------------------------------------------------- */
-html {
-  transition:
-    --accent var(--dur-mask) var(--ease),
-    --accent-soft var(--dur-mask) var(--ease),
-    --accent-glow var(--dur-mask) var(--ease),
-    --accent-line var(--dur-mask) var(--ease);
-}
+/* ---- Mask hue aliases --------------------------------------------------
+   These declarations are the source of truth. The 250ms crossfade between two
+   masks is driven from `src/lib/tint.ts`, which writes the same variables
+   inline for the duration of the switch and then hands control back here.
+   A declared `transition: --accent ...` looks correct but does not advance
+   reliably for registered custom properties, which left the tint frozen.
+   ---------------------------------------------------------------------- */
 
 [data-mask-hue='cove'] {
   --accent: var(--hue-cove);

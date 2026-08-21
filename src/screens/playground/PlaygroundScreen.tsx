@@ -43,6 +43,11 @@ import {
 } from '../../components/trust'
 import { Countdown, EmberRing, Horizon, RetentionChip, UndoSendBar } from '../../components/time'
 import { Murmur } from '../../components/nav/Murmur'
+import { LatencyDot, OccupantPill, RelayChip, RelayDiagram, Waveform } from '../../components/voice'
+import { StoryRing } from '../../components/social/StoriesRail'
+import { AuraMeter, BadgeTile, QrMark, ReputationLaurel } from '../../components/social/Stats'
+import { TransferCard } from '../../components/files/TransferCard'
+import { SOCIAL } from '../../mock/social'
 
 function Row({ title, note, children }: { title: string; note?: string; children: React.ReactNode }) {
   return (
@@ -384,6 +389,107 @@ export function PlaygroundScreen() {
                 <span className="mono-num text-12 text-low">{i}</span>
               </div>
             ))}
+          </div>
+        </Row>
+
+        <Row title="Voice" note="Speaking is a ring pulse and three bars. Nothing bounces.">
+          <div className="grid w-full grid-cols-2 gap-3 sm:grid-cols-4">
+            <OccupantPill maskId="p-rho" speaking muted={false} />
+            <OccupantPill maskId="p-vex" speaking={false} muted={false} you />
+            <OccupantPill maskId="p-pixel" speaking={false} muted />
+            <OccupantPill maskId="p-konstantin" speaking={false} muted={false} />
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <RelayChip relay="community" />
+            <RelayChip relay="self-hosted" />
+            <LatencyDot ms={14} />
+            <LatencyDot ms={44} />
+            <LatencyDot ms={128} />
+            <Waveform bars={3} size={14} />
+            <Waveform bars={5} size={18} active={false} />
+          </div>
+          <div className="w-full max-w-md">
+            <RelayDiagram relay="community" />
+          </div>
+        </Row>
+
+        <Row title="Transfers" note="Direct is the happy path. A relay carries bytes it cannot read.">
+          <div className="w-full max-w-md space-y-2">
+            <TransferCard
+              messageId="pg-1"
+              media={{
+                kind: 'file',
+                name: 'raid-vod-s4e11.mkv',
+                size: '2.4 GB',
+                p2p: {
+                  route: 'direct',
+                  progress: 0.62,
+                  resumable: true,
+                  state: 'sending',
+                  throughput: '84 MB/s',
+                  peerDevice: 'Rho · ThinkPad',
+                },
+              }}
+            />
+            <TransferCard
+              messageId="pg-2"
+              media={{
+                kind: 'file',
+                name: 'kiln-raw-set.zip',
+                size: '4.8 GB',
+                p2p: {
+                  route: 'relay',
+                  progress: 0.34,
+                  resumable: true,
+                  state: 'paused',
+                  throughput: '0 MB/s',
+                  peerDevice: 'Mira · Pixel 10 Pro',
+                },
+              }}
+            />
+            <TransferCard
+              messageId="pg-3"
+              media={{
+                kind: 'file',
+                name: 'poster-series.afdesign',
+                size: '212 MB',
+                p2p: {
+                  route: 'direct',
+                  progress: 0.18,
+                  resumable: true,
+                  state: 'failed',
+                  throughput: '—',
+                  peerDevice: 'Lark · Desktop',
+                },
+              }}
+            />
+          </div>
+        </Row>
+
+        <Row title="Social" note="Visibility and trust, both opt-in.">
+          <div className="flex items-center gap-4">
+            {OWN_MASKS.map((m, i) => (
+              <div key={m.id} className="flex flex-col items-center gap-1.5">
+                <StoryRing hue={m.hue} seen={i === 2}>
+                  <MaskAvatar maskId={m.id} size={44} presence={false} ring={false} />
+                </StoryRing>
+                <span className="text-12 text-low">{i === 2 ? 'seen' : 'new'}</span>
+              </div>
+            ))}
+          </div>
+          <div className="w-full max-w-md rounded-card border border-[var(--line)] bg-ink-1 p-4">
+            <AuraMeter aura={SOCIAL.aura} />
+          </div>
+          <div className="w-full max-w-md rounded-card border border-[var(--line)] bg-ink-1 p-4">
+            <ReputationLaurel reputation={SOCIAL.reputation} />
+          </div>
+          <div className="grid w-full max-w-md gap-2 sm:grid-cols-2">
+            {SOCIAL.reputation.badges.slice(0, 4).map((b) => (
+              <BadgeTile key={b.id} badge={b} />
+            ))}
+          </div>
+          <div className="rounded-card bg-[var(--text-hi)] p-2">
+            <QrMark seed="playground" size={96} />
           </div>
         </Row>
 

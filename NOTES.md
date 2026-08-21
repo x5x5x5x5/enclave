@@ -104,3 +104,49 @@ in another room — which is the entire point of a resumable transfer.
 view-once cover, expired tombstone, hold-to-view, watch budget, burn-after-listen voice note,
 "View in app only" attachment, direct transfer, undo window, scheduled section. Palette is fully
 keyboard navigable (arrows, enter, escape).
+
+---
+
+## P2 — Presence & social
+
+**The mask crossfade had to be driven, not declared.** `tokens.css` originally transitioned the
+registered `--accent*` properties directly (`html { transition: --accent 250ms ... }`). It reads
+beautifully and it does not work: in this engine the computed value of a transitioning *registered*
+custom property sticks at the start of the transition, so `data-mask-hue` would flip to `fog` while
+`--accent` stayed cove — the whole signature, silently dead. Caught it in the live DOM, not by
+eye. `src/lib/tint.ts` now interpolates the four accent aliases itself over 250ms on the product's
+own easing curve, writes them inline for the duration, and clears the inline values so the declared
+`[data-mask-hue]` tokens take over again. Reduced motion snaps. The declarations in `tokens.css`
+remain the source of truth, so the tint is correct with JavaScript off the critical path.
+
+**Salon does not get a channel sidebar.** The design system says structure is the privacy signal,
+so the quiet room collapses its channel column into a header dropdown rather than shrinking the
+same three-column layout. Entering The Reading Room genuinely reshapes the shell: 17/1.7 body,
+680px column, chrome at 40% until hover, no list column.
+
+**The audience lens swaps identity, not just visibility.** A stranger sees no handle at all (the
+name reads "Someone"); a contact sees the handle; a LostEra member sees *Aija* even when you are
+currently wearing Nova, because LostEra never met Nova. `AUDIENCE_KNOWS` replaced the original
+`AUDIENCE_MASK`, which mapped every audience to the same mask and therefore demonstrated nothing.
+
+**Edit-mode reordering is arrow buttons plus a grip affordance**, not real drag. The spec allows
+the illusion; arrows are the honest version of it, they work on touch, and they are reachable from
+the keyboard. Reordering is within a column, as specified.
+
+**QR codes are drawn, not generated.** A deterministic 25×25 module grid with real finder patterns
+— convincing at card size, no library, no encoded payload that could mislead anyone into scanning
+it.
+
+**Stories:** conic rings in the author's mask hue (flat hairline once seen), 6s auto-advancing
+segments that pause on press or when the reply field has focus, keyboard arrows, view-once
+tombstoning on advance, and a reply that says out loud it becomes a direct message. The composer
+shows the audience as one chip — scope *and* mask — because that pair is the whole privacy story.
+
+**Aura is a half-arc with a sparkline; Reputation is a laurel whose leaf count grows with tier.**
+Both collapse to "Stats are off. Only you can turn them on." from a single master toggle.
+
+**P2 gate:** typecheck, lint and build clean. Voice room reads as live in a screenshot (speaking
+ring, waveform, relay chip, mono latency, occupant spill). Social Card exports a real PNG through
+`html-to-image` across all four templates. Switching LostEra → The Reading Room visibly reshapes
+the shell (verified: `data-atmosphere="salon"`, 17px/1.7 body, 680px column, chrome 0.4, no channel
+column).
