@@ -1,0 +1,167 @@
+import { DAY, HOUR, MINUTE, ago } from '../lib/time'
+import type { VaultItem } from './types'
+
+/* The vault is the one place with no audience. Header says so, every tab. */
+
+export const VAULT: VaultItem[] = [
+  {
+    id: 'v-n1',
+    kind: 'note',
+    title: 'Ramp rotation, season 4',
+    preview:
+      'Stack right. Hold until the second cast. Konstantin calls the rotate so nobody moves early. If the healer drifts, we lose line of sight and the third pull goes bad.',
+    ts: ago(3 * HOUR),
+  },
+  {
+    id: 'v-n2',
+    kind: 'note',
+    title: 'Things to ask Mira',
+    preview: 'Kiln schedule. Whether the big piece is for sale. Saturday, what time exactly.',
+    ts: ago(28 * HOUR),
+  },
+  {
+    id: 'v-n3',
+    kind: 'note',
+    title: 'Recovery phrase hint',
+    preview: 'Not the phrase. The place. Second drawer, behind the manual.',
+    ts: ago(9 * DAY),
+  },
+  {
+    id: 'v-s1',
+    kind: 'saved',
+    title: 'Konstantin · #raids',
+    preview: 'Works for me. I will call the rotate so nobody moves early.',
+    ts: ago(5 * HOUR),
+    fromChannelId: 'ch-raids',
+  },
+  {
+    id: 'v-s2',
+    kind: 'saved',
+    title: 'Anselme · #design-crit',
+    preview: 'The margin is doing all the work here and I mean that as a compliment.',
+    ts: ago(9 * HOUR),
+    fromChannelId: 'ch-designcrit',
+  },
+  {
+    id: 'v-s3',
+    kind: 'saved',
+    title: 'Ghostwriter · #annotations',
+    preview: 'p.214 — the narrator stops using names for eleven pages and nobody notices.',
+    ts: ago(3 * DAY),
+    fromChannelId: 'ch-annotations',
+  },
+  {
+    id: 'v-f1',
+    kind: 'file',
+    title: 'ramp-route-s2.zip',
+    preview: 'Archive · 12 files',
+    ts: ago(2 * DAY),
+    size: '760 MB',
+  },
+  {
+    id: 'v-f2',
+    kind: 'file',
+    title: 'poster-series.afdesign',
+    preview: 'Design document',
+    ts: ago(4 * DAY),
+    size: '212 MB',
+  },
+  {
+    id: 'v-f3',
+    kind: 'file',
+    title: 'kiln.jpg',
+    preview: 'Image · 4032 × 3024',
+    ts: ago(3 * HOUR),
+    size: '4.2 MB',
+  },
+  {
+    id: 'v-f4',
+    kind: 'file',
+    title: 'roster-s4.pdf',
+    preview: 'Document · 3 pages',
+    ts: ago(40 * MINUTE),
+    size: '96 KB',
+  },
+  {
+    id: 'v-f5',
+    kind: 'file',
+    title: 'recovery-kit.txt',
+    preview: 'Plain text · 12 words',
+    ts: ago(30 * DAY),
+    size: '1 KB',
+  },
+  {
+    id: 'v-l1',
+    kind: 'link',
+    title: 'A short history of the margin note',
+    preview: 'Read later · saved from #annotations',
+    ts: ago(6 * HOUR),
+    host: 'quires.press',
+  },
+  {
+    id: 'v-l2',
+    kind: 'link',
+    title: 'Relay topology, explained badly',
+    preview: 'Read later · saved from ops sync',
+    ts: ago(2 * DAY),
+    host: 'northrack.net',
+  },
+  {
+    id: 'v-l3',
+    kind: 'link',
+    title: 'Season 4 patch notes',
+    preview: 'Read later · saved from #general',
+    ts: ago(30 * HOUR),
+    host: 'lostera.game',
+  },
+  {
+    id: 'v-c1',
+    kind: 'clip',
+    title: 'lobby code 4471-QX',
+    preview: 'lobby code 4471-QX',
+    ts: ago(2 * MINUTE),
+    device: 'Pixel 10 Pro',
+  },
+  {
+    id: 'v-c2',
+    kind: 'clip',
+    title: 'northrack.net/relay-status',
+    preview: 'northrack.net/relay-status',
+    ts: ago(22 * MINUTE),
+    device: 'ThinkPad',
+  },
+  {
+    id: 'v-c3',
+    kind: 'clip',
+    title: 'Stack right of the ramp, hold until the second cast',
+    preview: 'Stack right of the ramp, hold until the second cast',
+    ts: ago(3 * HOUR),
+    device: 'Desktop',
+  },
+  {
+    id: 'v-c4',
+    kind: 'clip',
+    title: '#8CBE6D',
+    preview: '#8CBE6D',
+    ts: ago(5 * HOUR),
+    device: 'ThinkPad',
+  },
+  {
+    id: 'v-c5',
+    kind: 'clip',
+    title: 'kiln pickup, Saturday 14:00',
+    preview: 'kiln pickup, Saturday 14:00',
+    ts: ago(26 * HOUR),
+    device: 'Pixel 10 Pro',
+  },
+]
+
+export const VAULT_TABS = [
+  { id: 'note', label: 'Notes' },
+  { id: 'saved', label: 'Saved' },
+  { id: 'file', label: 'Files' },
+  { id: 'link', label: 'Links' },
+  { id: 'clip', label: 'Clipboard' },
+] as const
+
+export type VaultTabId = (typeof VAULT_TABS)[number]['id']

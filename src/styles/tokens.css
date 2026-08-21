@@ -1,0 +1,233 @@
+/* ============================================================================
+   ENCLAVE — design tokens
+   Every value the design system names lives here. Components reference tokens,
+   never raw hex. The two signature mechanisms are token-level:
+     1. --accent* are ALIASES to the active mask's hue (see [data-mask-hue])
+     2. --atm-* reshape the shell per space atmosphere (see [data-atmosphere])
+   ========================================================================== */
+
+/* Registered so the mask crossfade is a real 250ms color interpolation
+   rather than a hard swap. */
+@property --accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #33c6b5;
+}
+@property --accent-soft {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgb(51 198 181 / 0.12);
+}
+@property --accent-glow {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgb(51 198 181 / 0.4);
+}
+@property --accent-line {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgb(51 198 181 / 0.24);
+}
+
+:root {
+  /* ---- Neutrals · "Ink" ------------------------------------------------- */
+  --ink-0: #0b0e13; /* app canvas            */
+  --ink-1: #11151d; /* surfaces              */
+  --ink-2: #171d27; /* raised / hover / modal*/
+  --ink-3: #1e2532; /* pressed / inset well  */
+  --line: #232b38; /* hairline               */
+  --line-soft: rgb(35 43 56 / 0.6); /* the 60% hairline the system calls for */
+
+  --ink-0-rgb: 11 14 19;
+  --ink-1-rgb: 17 21 29;
+  --ink-2-rgb: 23 29 39;
+
+  --text-hi: #e9edf3;
+  --text-mid: #97a1b0;
+  --text-low: #5e6877;
+  --text-hi-rgb: 233 237 243;
+
+  /* ---- Mask hues ------------------------------------------------------- */
+  --hue-cove: #33c6b5;
+  --hue-cove-rgb: 51 198 181;
+  --hue-iris: #8b7cf6;
+  --hue-iris-rgb: 139 124 246;
+  --hue-saffron: #e0ac4f;
+  --hue-saffron-rgb: 224 172 79;
+  --hue-rose: #e27a97;
+  --hue-rose-rgb: 226 122 151;
+  --hue-moss: #8cbe6d;
+  --hue-moss-rgb: 140 190 109;
+  --hue-sky: #58a6e8;
+  --hue-sky-rgb: 88 166 232;
+  --hue-clay: #d08a63;
+  --hue-clay-rgb: 208 138 99;
+  --hue-fog: #8fa0b3;
+  --hue-fog-rgb: 143 160 179;
+
+  /* ---- Semantic -------------------------------------------------------- */
+  --ember: #e8a13d;
+  --ember-rgb: 232 161 61;
+  --ember-soft: rgb(232 161 61 / 0.12);
+  --ember-glow: rgb(232 161 61 / 0.4);
+
+  --breach: #e25563;
+  --breach-rgb: 226 85 99;
+  --breach-soft: rgb(226 85 99 / 0.12);
+  --breach-glow: rgb(226 85 99 / 0.4);
+
+  /* ---- Type ------------------------------------------------------------ */
+  --font-display: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  --font-ui: 'Instrument Sans Variable', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
+
+  --fs-12: 0.75rem;
+  --fs-13: 0.8125rem;
+  --fs-14: 0.875rem;
+  --fs-15: 0.9375rem;
+  --fs-17: 1.0625rem;
+  --fs-20: 1.25rem;
+  --fs-24: 1.5rem;
+  --fs-30: 1.875rem;
+  --fs-38: 2.375rem;
+
+  /* ---- Shape ----------------------------------------------------------- */
+  --r-chip: 6px;
+  --r-card: 10px;
+  --r-modal: 14px;
+  --r-full: 9999px;
+
+  /* 4px grid */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+
+  /* ---- Elevation ------------------------------------------------------- */
+  --shadow-modal: 0 16px 48px rgb(0 0 0 / 0.5);
+
+  /* ---- Motion ---------------------------------------------------------- */
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --dur-micro: 120ms;
+  --dur-std: 200ms;
+  --dur-overlay: 320ms;
+  --dur-mask: 250ms;
+
+  /* ---- Shell metrics --------------------------------------------------- */
+  --rail-w: 72px;
+  --list-w: 264px;
+  --panel-w: 288px;
+
+  /* ---- Atmosphere defaults (Hall) -------------------------------------- */
+  --atm-chat-size: var(--fs-15);
+  --atm-chat-leading: 1.6;
+  --atm-list-size: var(--fs-13);
+  --atm-list-leading: 1.4;
+  --atm-row-pad: 6px;
+  --atm-chrome-opacity: 1;
+  --atm-column-max: none;
+  --atm-stream-pad: 24px;
+}
+
+/* ---- Density ----------------------------------------------------------- */
+[data-density='compact'] {
+  --atm-row-pad: 3px;
+  --atm-chat-leading: 1.45;
+  --atm-stream-pad: 16px;
+}
+
+/* ---- Atmospheres ------------------------------------------------------- */
+[data-atmosphere='hall'] {
+  --atm-chat-size: var(--fs-15);
+  --atm-chat-leading: 1.6;
+  --atm-list-size: var(--fs-13);
+  --atm-list-leading: 1.4;
+  --atm-chrome-opacity: 1;
+  --atm-column-max: none;
+}
+[data-atmosphere='studio'] {
+  --atm-chat-size: var(--fs-15);
+  --atm-chat-leading: 1.6;
+  --atm-list-size: var(--fs-14);
+  --atm-list-leading: 1.5;
+  --atm-chrome-opacity: 1;
+  --atm-column-max: 900px;
+}
+[data-atmosphere='salon'] {
+  --atm-chat-size: var(--fs-17);
+  --atm-chat-leading: 1.7;
+  --atm-list-size: var(--fs-14);
+  --atm-list-leading: 1.5;
+  --atm-chrome-opacity: 0.4;
+  --atm-column-max: 680px;
+  --atm-stream-pad: 32px;
+}
+
+/* ---- Mask hue aliases -------------------------------------------------- */
+html {
+  transition:
+    --accent var(--dur-mask) var(--ease),
+    --accent-soft var(--dur-mask) var(--ease),
+    --accent-glow var(--dur-mask) var(--ease),
+    --accent-line var(--dur-mask) var(--ease);
+}
+
+[data-mask-hue='cove'] {
+  --accent: var(--hue-cove);
+  --accent-rgb: var(--hue-cove-rgb);
+  --accent-soft: rgb(51 198 181 / 0.12);
+  --accent-glow: rgb(51 198 181 / 0.4);
+  --accent-line: rgb(51 198 181 / 0.24);
+}
+[data-mask-hue='iris'] {
+  --accent: var(--hue-iris);
+  --accent-rgb: var(--hue-iris-rgb);
+  --accent-soft: rgb(139 124 246 / 0.12);
+  --accent-glow: rgb(139 124 246 / 0.4);
+  --accent-line: rgb(139 124 246 / 0.24);
+}
+[data-mask-hue='saffron'] {
+  --accent: var(--hue-saffron);
+  --accent-rgb: var(--hue-saffron-rgb);
+  --accent-soft: rgb(224 172 79 / 0.12);
+  --accent-glow: rgb(224 172 79 / 0.4);
+  --accent-line: rgb(224 172 79 / 0.24);
+}
+[data-mask-hue='rose'] {
+  --accent: var(--hue-rose);
+  --accent-rgb: var(--hue-rose-rgb);
+  --accent-soft: rgb(226 122 151 / 0.12);
+  --accent-glow: rgb(226 122 151 / 0.4);
+  --accent-line: rgb(226 122 151 / 0.24);
+}
+[data-mask-hue='moss'] {
+  --accent: var(--hue-moss);
+  --accent-rgb: var(--hue-moss-rgb);
+  --accent-soft: rgb(140 190 109 / 0.12);
+  --accent-glow: rgb(140 190 109 / 0.4);
+  --accent-line: rgb(140 190 109 / 0.24);
+}
+[data-mask-hue='sky'] {
+  --accent: var(--hue-sky);
+  --accent-rgb: var(--hue-sky-rgb);
+  --accent-soft: rgb(88 166 232 / 0.12);
+  --accent-glow: rgb(88 166 232 / 0.4);
+  --accent-line: rgb(88 166 232 / 0.24);
+}
+[data-mask-hue='clay'] {
+  --accent: var(--hue-clay);
+  --accent-rgb: var(--hue-clay-rgb);
+  --accent-soft: rgb(208 138 99 / 0.12);
+  --accent-glow: rgb(208 138 99 / 0.4);
+  --accent-line: rgb(208 138 99 / 0.24);
+}
+/* fog is deliberately unremarkable — going anonymous drains the interface */
+[data-mask-hue='fog'] {
+  --accent: var(--hue-fog);
+  --accent-rgb: var(--hue-fog-rgb);
+  --accent-soft: rgb(143 160 179 / 0.1);
+  --accent-glow: rgb(143 160 179 / 0.32);
+  --accent-line: rgb(143 160 179 / 0.18);
+}

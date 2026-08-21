@@ -1,0 +1,285 @@
+@import 'tailwindcss';
+@import './tokens.css';
+
+/* Map design tokens into Tailwind's namespaces so utilities and tokens can
+   never drift apart. Components use utilities; utilities resolve to tokens. */
+@theme inline {
+  --color-ink-0: var(--ink-0);
+  --color-ink-1: var(--ink-1);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+
+  --color-hi: var(--text-hi);
+  --color-mid: var(--text-mid);
+  --color-low: var(--text-low);
+
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-glow: var(--accent-glow);
+  --color-accent-line: var(--accent-line);
+
+  --color-ember: var(--ember);
+  --color-ember-soft: var(--ember-soft);
+  --color-ember-glow: var(--ember-glow);
+  --color-breach: var(--breach);
+  --color-breach-soft: var(--breach-soft);
+  --color-breach-glow: var(--breach-glow);
+
+  --color-cove: var(--hue-cove);
+  --color-iris: var(--hue-iris);
+  --color-saffron: var(--hue-saffron);
+  --color-rose: var(--hue-rose);
+  --color-moss: var(--hue-moss);
+  --color-sky: var(--hue-sky);
+  --color-clay: var(--hue-clay);
+  --color-fog: var(--hue-fog);
+
+  --font-display: var(--font-display);
+  --font-ui: var(--font-ui);
+  --font-mono: var(--font-mono);
+
+  --text-12: var(--fs-12);
+  --text-13: var(--fs-13);
+  --text-14: var(--fs-14);
+  --text-15: var(--fs-15);
+  --text-17: var(--fs-17);
+  --text-20: var(--fs-20);
+  --text-24: var(--fs-24);
+  --text-30: var(--fs-30);
+  --text-38: var(--fs-38);
+
+  --radius-chip: var(--r-chip);
+  --radius-card: var(--r-card);
+  --radius-modal: var(--r-modal);
+
+  --ease-enclave: var(--ease);
+
+  --shadow-modal: var(--shadow-modal);
+}
+
+@layer base {
+  * {
+    border-color: var(--line);
+    min-width: 0;
+  }
+
+  html {
+    background: var(--ink-0);
+    color-scheme: dark;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    margin: 0;
+    background: var(--ink-0);
+    color: var(--text-hi);
+    font-family: var(--font-ui);
+    font-size: var(--fs-14);
+    line-height: 1.5;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior: none;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+
+  button, input, textarea, select {
+    font: inherit;
+    color: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-glow);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  ::selection {
+    background: var(--accent-soft);
+    color: var(--text-hi);
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--line);
+    border-radius: var(--r-full);
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #2e3949;
+    background-clip: content-box;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Motion. Reduced motion is non-negotiable: opacity only, instant heights.
+   `[data-motion="reduced"]` is the in-app override in Settings › Appearance.
+   ------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+[data-motion='reduced'] *,
+[data-motion='reduced'] *::before,
+[data-motion='reduced'] *::after {
+  animation-duration: 1ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 1ms !important;
+  scroll-behavior: auto !important;
+}
+
+@keyframes ember-dissolve {
+  0% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+  60% {
+    opacity: 0.5;
+    filter: blur(3px);
+    transform: translateY(-2px);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes speak-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 var(--accent-glow);
+  }
+  50% {
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+}
+
+@keyframes murmur {
+  0%, 100% {
+    opacity: 0.25;
+    transform: scaleY(0.6);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes bar {
+  0%, 100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -180% 0; }
+  100% { background-position: 180% 0; }
+}
+
+@keyframes typing-dot {
+  0%, 60%, 100% { opacity: 0.25; transform: translateY(0); }
+  30% { opacity: 1; transform: translateY(-2px); }
+}
+
+@utility hairline-b {
+  border-bottom: 1px solid var(--line-soft);
+}
+@utility hairline-t {
+  border-top: 1px solid var(--line-soft);
+}
+@utility hairline-r {
+  border-right: 1px solid var(--line-soft);
+}
+@utility hairline-l {
+  border-left: 1px solid var(--line-soft);
+}
+
+/* Chrome that fades in Salon spaces until you reach for it. */
+@utility atm-chrome {
+  opacity: var(--atm-chrome-opacity);
+  transition: opacity var(--dur-overlay) var(--ease);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility mono-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Range input, themed to the active mask. */
+.enclave-slider {
+  --track: var(--line);
+}
+.enclave-slider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: var(--r-full);
+  background: linear-gradient(
+    to right,
+    var(--accent) 0 var(--pct),
+    var(--track) var(--pct) 100%
+  );
+}
+.enclave-slider::-moz-range-track {
+  height: 4px;
+  border-radius: var(--r-full);
+  background: var(--track);
+}
+.enclave-slider::-moz-range-progress {
+  height: 4px;
+  border-radius: var(--r-full);
+  background: var(--accent);
+}
+.enclave-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -5px;
+  height: 14px;
+  width: 14px;
+  border-radius: var(--r-full);
+  background: var(--text-hi);
+  border: 3px solid var(--ink-0);
+  box-shadow: 0 0 0 1px var(--line);
+  cursor: pointer;
+}
+.enclave-slider::-moz-range-thumb {
+  height: 14px;
+  width: 14px;
+  border-radius: var(--r-full);
+  background: var(--text-hi);
+  border: 3px solid var(--ink-0);
+  box-shadow: 0 0 0 1px var(--line);
+  cursor: pointer;
+}
