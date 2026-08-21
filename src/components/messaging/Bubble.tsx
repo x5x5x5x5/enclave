@@ -58,7 +58,10 @@ function ReplyQuote({ replyToId }: { replyToId: string }) {
   const author = maskById(target.authorMaskId)
   return (
     <div className="mb-1 flex items-center gap-2 border-l-2 pl-2" style={{ borderColor: `var(--hue-${author.hue})` }}>
-      <span className="text-12 font-medium" style={{ color: `var(--hue-${author.hue})` }}>
+      <span
+        className="shrink-0 text-12 font-medium"
+        style={{ color: `var(--hue-${author.hue})` }}
+      >
         {author.displayName}
       </span>
       <span className="min-w-0 truncate text-12 text-low">

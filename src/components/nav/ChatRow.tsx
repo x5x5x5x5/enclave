@@ -37,9 +37,6 @@ export function ChatRow({ row, to, active }: { row: ChatRowData; to: string; act
           >
             {row.title}
           </span>
-          {row.memberNote ? (
-            <span className="mono-num shrink-0 text-12 text-low">{row.memberNote}</span>
-          ) : null}
           {row.sealed ? (
             <span className="shrink-0 text-low" title="Sealed">
               <SealGlyph size={12} />
@@ -67,7 +64,12 @@ export function ChatRow({ row, to, active }: { row: ChatRowData; to: string; act
               typing
             </span>
           ) : (
-            <span className="min-w-0 flex-1 truncate text-12 text-mid">{row.snippet}</span>
+            <>
+              {row.memberNote ? (
+                <span className="mono-num shrink-0 text-12 text-low">{row.memberNote} ·</span>
+              ) : null}
+              <span className="min-w-0 flex-1 truncate text-12 text-mid">{row.snippet}</span>
+            </>
           )}
           <span className="ml-auto flex shrink-0 items-center gap-1.5">
             {row.muted ? <BellOff size={11} strokeWidth={1.5} className="text-low" /> : null}

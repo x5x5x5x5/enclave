@@ -19,12 +19,14 @@ import { IdentityChip } from '../../components/identity/IdentityChip'
 import { Countdown, RetentionChip } from '../../components/time'
 import { BreachBanner, FuzzedCount, SealBadge } from '../../components/trust'
 import { GhostGlyph } from '../../components/trust/Glyphs'
+import { useContextMask } from '../../components/shell/useChrome'
 import { MemberPanel } from './MemberPanel'
 import { ReportFlow, ReportSelectionBar } from '../moderation/ReportFlow'
 
 export function Conversation({ roomId, backTo }: { roomId: string; backTo: string }) {
   const navigate = useNavigate()
   const room = resolveRoom(roomId)
+  useContextMask(room?.usingMaskId, room?.subtitle ?? room?.title)
   const rightPanel = useUi((s) => s.rightPanel)
   const setRightPanel = useUi((s) => s.setRightPanel)
   const later = useUi((s) => s.later)
@@ -61,13 +63,11 @@ export function Conversation({ roomId, backTo }: { roomId: string; backTo: strin
     <div className="flex min-h-0 min-w-0 flex-1">
       <div className="flex min-h-0 min-w-0 flex-1 flex-col bg-ink-0">
         <header className="atm-chrome flex shrink-0 items-center gap-3 px-3 py-2.5 md:px-4">
-          <IconButton
-            label="Back"
-            className="md:hidden"
-            onClick={() => navigate(backTo)}
-          >
-            <ArrowLeft size={18} strokeWidth={1.5} />
-          </IconButton>
+          <span className="inline-flex md:hidden">
+            <IconButton label="Back" onClick={() => navigate(backTo)}>
+              <ArrowLeft size={18} strokeWidth={1.5} />
+            </IconButton>
+          </span>
 
           <div className="flex min-w-0 flex-1 items-center gap-2">
             {isDm ? <MaskAvatar maskId={room.memberMaskIds?.[0] ?? ''} size={28} /> : null}
@@ -86,32 +86,35 @@ export function Conversation({ roomId, backTo }: { roomId: string; backTo: strin
               <Countdown until={room.temporaryUntil} prefix="closes in" />
             ) : null}
             {room.headerNote ? (
-              <Chip className="hidden lg:inline-flex">{room.headerNote}</Chip>
+              <span className="hidden lg:inline-flex">
+                <Chip>{room.headerNote}</Chip>
+              </span>
             ) : null}
           </div>
 
           <div className="flex shrink-0 items-center gap-1">
             {room.memberEstimate ? (
-              <FuzzedCount value={room.memberEstimate} className="mr-1 hidden md:flex" />
+              <span className="mr-1 hidden md:inline-flex">
+                <FuzzedCount value={room.memberEstimate} />
+              </span>
             ) : null}
             <IconButton label="Call" onClick={() => later('Calling from a text room')}>
               <Phone size={17} strokeWidth={1.5} />
             </IconButton>
-            <IconButton
-              label="Members"
-              className="lg:hidden"
-              onClick={() => openOverlay('room-details', roomId)}
-            >
-              <Users size={17} strokeWidth={1.5} />
-            </IconButton>
-            <IconButton
-              label="Right panel"
-              className="hidden lg:inline-flex"
-              active={panelOpen}
-              onClick={() => setRightPanel(panelOpen ? null : 'members')}
-            >
-              <PanelRight size={17} strokeWidth={1.5} />
-            </IconButton>
+            <span className="inline-flex lg:hidden">
+              <IconButton label="Members" onClick={() => openOverlay('room-details', roomId)}>
+                <Users size={17} strokeWidth={1.5} />
+              </IconButton>
+            </span>
+            <span className="hidden lg:inline-flex">
+              <IconButton
+                label="Right panel"
+                active={panelOpen}
+                onClick={() => setRightPanel(panelOpen ? null : 'members')}
+              >
+                <PanelRight size={17} strokeWidth={1.5} />
+              </IconButton>
+            </span>
           </div>
         </header>
 

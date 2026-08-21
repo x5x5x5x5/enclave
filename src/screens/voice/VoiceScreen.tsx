@@ -10,7 +10,7 @@ import { Button, IconButton } from '../../components/primitives/Button'
 import { EmptyState } from '../../components/primitives/EmptyState'
 import { Sheet } from '../../components/primitives/Overlay'
 import { PresenceThread } from '../../components/shell/Columns'
-import { useAtmosphere } from '../../components/shell/useChrome'
+import { useAtmosphere, useContextMask } from '../../components/shell/useChrome'
 import { Countdown } from '../../components/time'
 import { SealBadge } from '../../components/trust'
 import { LatencyDot, OccupantPill, RelayChip, RelayDiagram } from '../../components/voice'
@@ -31,6 +31,7 @@ export function VoiceScreen() {
   const [deafened, setDeafened] = useState(false)
 
   useAtmosphere(community?.atmosphere)
+  useContextMask(community?.usingMaskId, community?.name)
 
   const room = voice.find((r) => r.channelId === channelId)
   const youMask = community?.usingMaskId ?? activeMaskId
@@ -72,7 +73,8 @@ export function VoiceScreen() {
 
       <PresenceThread />
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-4 py-6 md:px-8">
+      {/* A room with four people in it should not read as an empty page. */}
+      <div className="flex min-h-0 flex-1 items-center overflow-y-auto px-4 py-6 md:px-8">
         <div className="mx-auto w-full max-w-4xl">
           {channel.temporary ? (
             <p className="mb-5 rounded-card border border-[color:var(--ember-glow)] bg-ember-soft px-3 py-2 text-13 text-ember">

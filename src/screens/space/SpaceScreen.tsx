@@ -10,7 +10,7 @@ import { Popover } from '../../components/primitives/Overlay'
 import { ChannelRow } from '../../components/nav/ChannelRow'
 import { IdentityChip } from '../../components/identity/IdentityChip'
 import { ListColumn } from '../../components/shell/Columns'
-import { useAtmosphere } from '../../components/shell/useChrome'
+import { useAtmosphere, useContextMask } from '../../components/shell/useChrome'
 import { FuzzedCount } from '../../components/trust'
 import { ZkGlyph } from '../../components/trust/Glyphs'
 import { Conversation } from '../conversation/Conversation'
@@ -24,6 +24,7 @@ export function SpaceScreen() {
   const reduce = useReducedMotion()
 
   useAtmosphere(community?.atmosphere)
+  useContextMask(community?.usingMaskId, community?.name)
 
   const grouped = useMemo(() => {
     if (!community) return { text: [], voice: [] }
@@ -129,9 +130,11 @@ export function SpaceScreen() {
               onClick={() => openOverlay('mask-switcher')}
             />
             {community.gate ? (
-              <Chip tone="neutral" icon={<ZkGlyph size={11} />} className="hidden sm:inline-flex">
-                {community.gate.label}
-              </Chip>
+              <span className="hidden sm:inline-flex">
+                <Chip tone="neutral" icon={<ZkGlyph size={11} />}>
+                  {community.gate.label}
+                </Chip>
+              </span>
             ) : null}
           </div>
           {channelId ? (

@@ -94,7 +94,7 @@ export function Composer({
         </div>
       ) : null}
 
-      <div className="flex items-end gap-1.5 rounded-card border border-[var(--line)] bg-ink-1 p-1.5 transition-colors focus-within:border-[color:var(--accent-line)]">
+      <div className="flex flex-wrap items-end gap-1.5 rounded-card border border-[var(--line)] bg-ink-1 p-1.5 transition-colors focus-within:border-[color:var(--accent-line)]">
         {/* attach — the picker knows whether a file can go device to device */}
         <Popover
           side="top"
@@ -249,7 +249,7 @@ export function Composer({
           }}
           placeholder={`Message ${roomTitle}`}
           aria-label={`Message ${roomTitle}`}
-          className="min-h-9 flex-1 resize-none self-center bg-transparent px-1 py-2 text-15 leading-relaxed text-hi outline-none placeholder:text-low"
+          className="order-first min-h-9 w-full resize-none self-center bg-transparent px-1 py-2 text-15 leading-relaxed text-hi outline-none placeholder:text-low md:order-none md:w-auto md:flex-1"
         />
 
         <IconButton label="Voice note" onClick={() => later('Recording voice notes')}>

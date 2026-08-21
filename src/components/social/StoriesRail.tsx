@@ -55,10 +55,17 @@ export function StoriesRail() {
   order.sort((a, b) => Number(b === activeMaskId) - Number(a === activeMaskId))
 
   return (
-    <div className="shrink-0 hairline-b">
+    <div
+      className="relative shrink-0 hairline-b"
+      style={{
+        maskImage: 'linear-gradient(to right, black 88%, transparent)',
+        WebkitMaskImage: 'linear-gradient(to right, black 88%, transparent)',
+      }}
+    >
       <div className="flex gap-3 overflow-x-auto no-scrollbar px-3 py-3">
         <button
           onClick={() => openOverlay('story-composer')}
+          aria-label="Add a story"
           className="flex w-14 shrink-0 flex-col items-center gap-1.5"
         >
           <span
@@ -78,6 +85,7 @@ export function StoriesRail() {
             <button
               key={maskId}
               onClick={() => openOverlay('story-viewer', maskId)}
+              aria-label={`Stories from ${mask.displayName}`}
               className="flex w-14 shrink-0 flex-col items-center gap-1.5"
             >
               <StoryRing hue={mask.hue} seen={seen}>

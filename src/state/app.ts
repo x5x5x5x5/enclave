@@ -11,8 +11,13 @@ export type MotionPref = 'system' | 'reduced'
 interface AppState {
   /* identity */
   activeMaskId: string
+  /** Who you are *in the room you are looking at*. Overrides the tint. */
+  contextMaskId: string | null
+  /** What to call that room when explaining scope, e.g. "LostEra", "Mira". */
+  contextLabel: string | null
   presence: Record<string, Presence>
   setActiveMask: (id: string) => void
+  setContextMask: (id: string | null, label?: string | null) => void
   setPresence: (maskId: string, presence: Presence) => void
   activeHue: () => Hue
 
@@ -73,12 +78,16 @@ export const useApp = create<AppState>()(
   persist(
     (set, get) => ({
       activeMaskId: USER.activeMaskId,
+      contextMaskId: null,
+      contextLabel: null,
       presence: {
         'm-aija': 'online',
         'm-nova': 'away',
         'm-courier7': 'invisible',
       },
       setActiveMask: (id) => set({ activeMaskId: id }),
+      setContextMask: (contextMaskId, contextLabel = null) =>
+        set({ contextMaskId, contextLabel }),
       setPresence: (maskId, presence) =>
         set((s) => ({ presence: { ...s.presence, [maskId]: presence } })),
       activeHue: () => maskById(get().activeMaskId).hue,

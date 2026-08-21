@@ -202,3 +202,51 @@ pages are the deliberately empty `Standup` voice room and the 404.
 
 **P3 gate:** typecheck, lint and build clean; five-minute click-through with zero dead ends — every
 out-of-scope control raises the "comes in a later phase" toast rather than doing nothing.
+
+---
+
+## Final pass — the screenshot manifest, and what shooting it exposed
+
+**The manifest is captured by a script, not by hand.** `scripts/shoot.mjs` drives the system
+browser through `puppeteer-core` (a dev dependency; nothing is downloaded and nothing reaches the
+app bundle) and produces all 36 images — 18 screens × 1440 and 390 — into `docs/screenshots`. Six of
+them need interaction first (advancing onboarding, opening the switcher, the palette, the social
+card, a story, and the report flow through to step 2), so the script performs those steps rather
+than capturing a static route.
+
+*Windows footnote:* `msedge.exe` is a GUI-subsystem binary and never writes its
+`DevTools listening on ws://…` line to an inherited stderr pipe, so `puppeteer.launch()` waits
+forever and then reports an exit it never observed. The script opens a fixed debugging port and
+`puppeteer.connect()`s to it instead, which works with Chrome too.
+
+**Four things only visible once the screens were real:**
+
+1. *The tint was following the wrong identity.* The accent tracked the globally active mask, so
+   The Reading Room — an anonymous space you are in as Courier-7 — still rendered cove green. The
+   thesis says the interface takes the shape of *your context*, and inside a space your context is
+   that space's mask. Rooms now declare a context mask (`useContextMask`) and the tint follows
+   `contextMaskId ?? activeMaskId`. LostEra → cove/hall, Atelier Nord → iris/studio, The Reading
+   Room → fog/salon, everywhere else → whoever you are wearing. The mask switcher gained the scoped
+   warning the spec asks for, naming the actual room: "Mira knows you as Aija and will keep doing
+   so."
+2. *Responsive display classes were silently losing.* `hidden lg:inline-flex` passed as a
+   `className` to a component whose own base class is `inline-flex` puts two utilities from the same
+   group in the cascade, and the component's own class won — so a desktop-only panel toggle, the
+   member count and a header chip all rendered at 390, squeezing the room title to nothing. Fixed by
+   wrapping in a span that owns the responsive display, in all five places.
+3. *The mobile composer could not fit its own placeholder.* Five 44px hit targets plus a field in
+   358px left about 140px for text, and "Message #raids" wrapped and clipped. The field now takes
+   its own row below the controls on phones and sits inline from `md` up — hit targets and legibility
+   both intact.
+4. *`/chats` opened onto a void on desktop.* The list is the screen on a phone, but on a wide
+   display an empty right pane is not an empty state, it is an unfinished one. Desktop now opens the
+   top conversation; the genuine "no conversations yet" empty state still exists underneath.
+
+Also from looking rather than reading: `MediaArt` strokes now use `non-scaling-stroke` (a story-sized
+crop was turning hairlines into enormous rings), the voice grid centres vertically, the stories rail
+fades at its scroll edge, and group member counts moved to the snippet line so "friday five" stopped
+truncating to "fri…".
+
+**Final gate:** `tsc -b`, `eslint .` and `vite build` clean. 37 routes render with no runtime errors.
+Reduced motion verified to clamp transitions in the running app, both from the system preference and
+from the in-app override. Every out-of-scope control raises the "comes in a later phase" toast.

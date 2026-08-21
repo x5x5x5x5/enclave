@@ -73,6 +73,7 @@ export function MediaArt({
             fill="none"
             stroke="rgb(233 237 243 / .14)"
             strokeWidth="1"
+            vectorEffect="non-scaling-stroke"
           />
         ))}
 
@@ -85,6 +86,7 @@ export function MediaArt({
             fill="none"
             stroke="rgb(233 237 243 / .22)"
             strokeWidth="1.2"
+            vectorEffect="non-scaling-stroke"
           />
           <path
             d={`M0 ${88 + pick(14, 12)} Q40 ${52 + pick(24, 14)} 80 ${78 + pick(18, 16)} T160 ${
@@ -93,6 +95,7 @@ export function MediaArt({
             fill="none"
             stroke="rgb(233 237 243 / .14)"
             strokeWidth="1.2"
+            vectorEffect="non-scaling-stroke"
           />
         </>
       )}

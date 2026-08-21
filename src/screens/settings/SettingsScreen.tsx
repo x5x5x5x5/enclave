@@ -71,13 +71,11 @@ export function SettingsScreen() {
 
       <MainColumn hideOnMobile={!section}>
         <header className="flex shrink-0 items-center gap-2 px-3 py-2.5 hairline-b md:px-6">
-          <IconButton
-            label="Back to settings"
-            className="md:hidden"
-            onClick={() => navigate('/settings')}
-          >
-            <ArrowLeft size={18} strokeWidth={1.5} />
-          </IconButton>
+          <span className="inline-flex md:hidden">
+            <IconButton label="Back to settings" onClick={() => navigate('/settings')}>
+              <ArrowLeft size={18} strokeWidth={1.5} />
+            </IconButton>
+          </span>
           <div className="min-w-0">
             <h2 className="truncate font-display text-17 text-hi">{current.label}</h2>
             <p className="truncate text-12 text-low">{current.note}</p>

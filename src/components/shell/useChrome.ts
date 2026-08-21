@@ -13,6 +13,7 @@ import { useApp } from '../../state/app'
  */
 export function useChrome() {
   const activeMaskId = useApp((s) => s.activeMaskId)
+  const contextMaskId = useApp((s) => s.contextMaskId)
   const density = useApp((s) => s.density)
   const motion = useApp((s) => s.motion)
   const systemReduce = useReducedMotion()
@@ -21,10 +22,12 @@ export function useChrome() {
   const reduce = motion === 'reduced' || !!systemReduce
 
   useEffect(() => {
-    const hue = maskById(activeMaskId).hue
+    // The tint follows who you are *here*, not who you were last. Walking into
+    // The Reading Room as Courier-7 drains the whole interface grey.
+    const hue = maskById(contextMaskId ?? activeMaskId).hue
     crossfadeAccent(previousHue.current, hue, reduce)
     previousHue.current = hue
-  }, [activeMaskId, reduce])
+  }, [activeMaskId, contextMaskId, reduce])
 
   useEffect(() => {
     document.documentElement.dataset.density = density
@@ -34,6 +37,15 @@ export function useChrome() {
     if (motion === 'reduced') document.documentElement.dataset.motion = 'reduced'
     else delete document.documentElement.dataset.motion
   }, [motion])
+}
+
+/** Declare which mask a screen is being viewed as, for the duration it is open. */
+export function useContextMask(maskId: string | undefined, label?: string) {
+  const setContextMask = useApp((s) => s.setContextMask)
+  useEffect(() => {
+    setContextMask(maskId ?? null, label ?? null)
+    return () => setContextMask(null, null)
+  }, [maskId, label, setContextMask])
 }
 
 /**

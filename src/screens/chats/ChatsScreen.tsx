@@ -163,12 +163,18 @@ export function ChatsScreen() {
 
       {roomId ? (
         <Conversation roomId={roomId} backTo="/chats" />
+      ) : rows[0] ? (
+        /* Desktop opens the top conversation rather than staring at a void.
+           Mobile keeps the list, because there the list *is* the screen. */
+        <div className="hidden min-h-0 min-w-0 flex-1 md:flex">
+          <Conversation roomId={rows[0].threadId} backTo="/chats" />
+        </div>
       ) : (
         <MainColumn hideOnMobile>
           <div className="flex flex-1 items-center justify-center">
             <EmptyState
-              title="Pick a conversation"
-              body="Or press Cmd K and go anywhere in the product."
+              title="No conversations yet"
+              body="Start one from the palette, or find a space worth joining."
               actionLabel="Open the palette"
               onAction={() => useUi.getState().openOverlay('command-palette')}
             />

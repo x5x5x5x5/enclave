@@ -2,7 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { Plus } from 'lucide-react'
 import { cx } from '../../lib/cx'
 import { BRAND } from '../../config/brand'
-import { OWN_MASKS } from '../../mock/masks'
+import { OWN_MASKS, maskById } from '../../mock/masks'
 import { HUE_LABEL, spacesUsingMask } from '../../mock/world'
 import type { Presence } from '../../mock/types'
 import { useApp } from '../../state/app'
@@ -18,16 +18,26 @@ const PRESENCES: { id: Presence; label: string }[] = [
   { id: 'invisible', label: 'Invisible' },
 ]
 
-export function MaskSwitcher({ scopeWarning }: { scopeWarning?: string }) {
+export function MaskSwitcher() {
   const open = useUi((s) => s.overlay) === 'mask-switcher'
   const closeOverlay = useUi((s) => s.closeOverlay)
   const later = useUi((s) => s.later)
   const toast = useUi((s) => s.toast)
   const activeMaskId = useApp((s) => s.activeMaskId)
+  const contextMaskId = useApp((s) => s.contextMaskId)
+  const contextLabel = useApp((s) => s.contextLabel)
   const setActiveMask = useApp((s) => s.setActiveMask)
   const presence = useApp((s) => s.presence)
   const setPresence = useApp((s) => s.setPresence)
   const reduce = useReducedMotion()
+
+  // Opened from inside a room, the switcher has to say what it will *not* do:
+  // that room keeps the identity it already knows.
+  const contextMask = contextMaskId ? maskById(contextMaskId) : null
+  const where = contextLabel ?? 'This room'
+  const scopeWarning = contextMask
+    ? `${where} knows you as ${contextMask.displayName} and will keep doing so. Changing your mask here would start a fresh, unlinked profile.`
+    : undefined
 
   return (
     <Modal
@@ -90,7 +100,10 @@ export function MaskSwitcher({ scopeWarning }: { scopeWarning?: string }) {
                     toast({
                       kind: 'accent',
                       title: `Now wearing ${mask.displayName}`,
-                      body: `${HUE_LABEL[mask.hue]} · ${mask.handle}`,
+                      body:
+                        contextMask && contextMask.id !== mask.id
+                          ? `${where} still knows you as ${contextMask.displayName}.`
+                          : `${HUE_LABEL[mask.hue]} · ${mask.handle}`,
                     })
                   }}
                   className="flex min-w-0 flex-1 items-start gap-3 text-left"
@@ -120,7 +133,9 @@ export function MaskSwitcher({ scopeWarning }: { scopeWarning?: string }) {
                       <span aria-hidden="true">·</span>
                       {spaces.length === 0
                         ? 'No spaces yet'
-                        : `${spaces.length} space${spaces.length === 1 ? '' : 's'} use this mask`}
+                        : spaces.length === 1
+                          ? '1 space uses this mask'
+                          : `${spaces.length} spaces use this mask`}
                     </span>
                   </span>
                 </button>
