@@ -96,7 +96,14 @@ transfers. Nothing else.
 lists — chats home, member panel, message gutters — avatars get a neutral hairline and no hue.
 Usernames are always `--text-hi`; colour-coded names are Discord's noise and we do not inherit it.
 
-**Everything else is ink.** Borders, resting icons, headers, badges, cards, toasts.
+**Everything else is ink.** Borders, resting icons, headers, cards, toasts.
+
+**Imagery is exempt, and only imagery.** Avatars, space emblems, album sleeves, badge crests and
+message attachments are *pictures*: they carry their own colour the way a photograph does in a dark
+room, and a product where every profile picture is grey is not calm, it is dead. Imagery is marked
+`data-imagery` so the audit can tell it apart from chrome, and it is held to a different standard —
+rich and varied, but never neon, and never used to carry interface state. The two-hue rule governs
+everything around the picture, which is what keeps the picture legible.
 
 Rest-state hues are defined in OKLCH with chroma capped at **0.10** (L 0.70–0.74). `--accent-soft`
 is an 8% tint. `--accent-glow` survives only as the focus ring: no other glow, coloured shadow or

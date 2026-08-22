@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { CornerUpRight, ExternalLink, FileText, Plus, Search } from 'lucide-react'
 import { cx } from '../../lib/cx'
 import { Screen } from '../../components/shell/Screen'
+import { MaskButton } from '../../components/identity/MaskButton'
 import { shortStamp } from '../../lib/time'
 import { BRAND } from '../../config/brand'
 import { VAULT, VAULT_TABS } from '../../mock/vault'
@@ -57,7 +58,10 @@ export function VaultScreen() {
     <Screen gutter={false} contentClassName="px-[var(--gutter)]">
       <div className="mx-auto w-full max-w-4xl py-6">
         <header>
-          <h1 className="font-display text-24 text-hi">Vault</h1>
+          <div className="flex min-w-0 items-center gap-2">
+            <MaskButton className="md:hidden" />
+            <h1 className="truncate font-display text-24 text-hi">Vault</h1>
+          </div>
           <p className="mt-1 flex items-center gap-1.5 text-13 text-mid">
             <SealGlyph size={13} />
             {BRAND.vaultPromise}

@@ -8,6 +8,7 @@ import { useWorld } from '../../state/world'
 import { BellOff, Pin } from 'lucide-react'
 import { ChatRow } from '../../components/nav/ChatRow'
 import { SwipeRow } from '../../components/nav/SwipeRow'
+import { MaskButton } from '../../components/identity/MaskButton'
 import { StoriesRail } from '../../components/social/StoriesRail'
 import { EmptyState } from '../../components/primitives/EmptyState'
 import { IconButton } from '../../components/primitives/Button'
@@ -115,8 +116,11 @@ export function ChatsScreen() {
           className="shrink-0 px-[var(--gutter)] pb-2 pt-3"
           style={{ paddingTop: 'calc(12px + var(--safe-top))' }}
         >
-          <div className="flex items-center justify-between gap-2">
-            <h1 className="font-display text-24 text-hi md:text-20">Chats</h1>
+          <div className="flex items-center gap-2">
+            <MaskButton className="md:hidden" />
+            <h1 className="min-w-0 flex-1 truncate font-display text-24 text-hi md:text-20">
+              Chats
+            </h1>
             <div className="flex items-center gap-1">
               {isMobile ? (
                 <IconButton label="Search" onClick={() => openOverlay('command-palette')}>

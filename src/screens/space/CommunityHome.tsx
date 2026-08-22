@@ -11,6 +11,7 @@ import { Card, SectionLabel } from '../../components/primitives/EmptyState'
 import { Chip } from '../../components/primitives/Chip'
 import { MaskAvatar } from '../../components/identity/MaskAvatar'
 import { IdentityChip } from '../../components/identity/IdentityChip'
+import { SpaceEmblem } from '../../components/nav/SpaceEmblem'
 import { MainColumn } from '../../components/shell/Columns'
 import { Countdown, RetentionChip } from '../../components/time'
 import { FuzzedCount } from '../../components/trust'
@@ -41,12 +42,14 @@ export function CommunityHome({ community }: { community: Community }) {
       <div className="scroll-area min-h-0 flex-1">
         <div className="mx-auto w-full max-w-3xl px-[var(--gutter)] py-8">
           <header>
-            <div
-              className="mb-4 flex h-14 w-14 items-center justify-center rounded-modal border bg-ink-2 font-display text-17 text-mid"
-              style={{ borderColor: `rgb(var(--hue-${community.hue}-rgb) / 0.35)` }}
-            >
-              {community.icon}
-            </div>
+            <SpaceEmblem
+              id={community.id}
+              hue={community.hue}
+              fallback={community.icon}
+              size={64}
+              radius={14}
+              className="mb-4"
+            />
             <h1 className="font-display text-30 leading-tight text-hi">{community.name}</h1>
             <p className="mt-1.5 max-w-xl text-15 leading-relaxed text-mid">{community.blurb}</p>
 

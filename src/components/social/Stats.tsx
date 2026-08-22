@@ -1,4 +1,5 @@
 import { cx } from '../../lib/cx'
+import { BadgeCrest } from './BadgeCrest'
 import { fnv1a } from '../../lib/hash'
 import type { SocialStats } from '../../mock/types'
 
@@ -176,25 +177,20 @@ export function BadgeTile({
 }: {
   badge: SocialStats['reputation']['badges'][number]
 }) {
-  /* Neutral tiles: the kind is already written under the name, so colour was
-     doing nothing the label was not already doing. */
-  const tone = { border: 'var(--line)', bg: 'var(--ink-2)', text: 'var(--text-mid)' }
-
   return (
     <div
-      title={badge.note}
-      className="flex items-center gap-2.5 rounded-card border p-2.5"
-      style={{ borderColor: tone.border, background: tone.bg }}
+      title={`${badge.name} — ${badge.note}`}
+      className="group flex flex-col items-center gap-2 rounded-card border border-[var(--line)] bg-ink-2 px-2 py-3 text-center transition-colors hover:border-[color:var(--accent-line)] hover:bg-ink-3"
     >
-      <span
-        className="mono-num flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] border text-12"
-        style={{ borderColor: tone.border, color: tone.text }}
-      >
-        {badge.glyph}
-      </span>
+      <BadgeCrest
+        id={badge.id}
+        kind={badge.kind}
+        size={48}
+        className="transition-transform duration-[var(--dur-std)] group-hover:-translate-y-0.5"
+      />
       <span className="min-w-0">
         <span className="block truncate text-13 text-hi">{badge.name}</span>
-        <span className="block text-12 capitalize text-low">{badge.kind}</span>
+        <span className="block truncate text-12 capitalize text-low">{badge.kind}</span>
       </span>
     </div>
   )

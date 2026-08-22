@@ -161,6 +161,10 @@ const MEASURE = () => {
   }
 
   for (const el of document.querySelectorAll('body *')) {
+    // Imagery is content, not chrome: an avatar, a space emblem, a record
+    // sleeve or an attachment carries its own colour the way a photograph does.
+    // The two-hue rule governs the interface around them.
+    if (el.closest('[data-imagery]')) continue
     const r = el.getBoundingClientRect()
     if (r.width <= 0 || r.height <= 0) continue
     if (r.bottom < 0 || r.top > vh || r.right < 0 || r.left > vw) continue

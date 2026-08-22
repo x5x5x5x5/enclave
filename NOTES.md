@@ -383,3 +383,47 @@ Typecheck, lint and build clean. `npm run audit:color` passes the two-hue rule o
 `docs/screenshots/grayscale-*` show the UI remains navigable with colour removed. No raw hex outside
 `tokens.css`. The only surviving gradient in the chrome is the Horizon; the only surviving glow is
 the focus ring.
+
+---
+
+## P6 — Making it feel alive
+
+Review feedback, and one of the notes was a fair criticism of P5: the calm pass had stripped colour
+out of *everything*, imagery included, and a product where every profile picture is grey is not
+calm — it is dead.
+
+**The law changed, deliberately and in one place.** "Colour discipline" in the design system now
+exempts imagery: avatars, space emblems, album sleeves, badge crests and message attachments are
+pictures, and a picture carries its own colour the way a photograph does in a dark room. Imagery is
+marked `data-imagery` so `audit-color.mjs` can tell it apart, and it paints from the `--hue-*-vivid`
+stops while chrome stays on the muted ones. The two-hue rule still governs everything *around* the
+picture — which is exactly what makes the picture legible.
+
+**Profile pictures are pictures now.** Eight geometric marks became twelve drawn scenes — a cat, a
+comet, a city at night, dunes, a paper crane, a stack of books — each built from a handful of bold
+shapes so it survives 20px in a chat list and holds up at 72px on a profile. Everything is inline
+SVG because the prototype still makes no network calls.
+
+**Spaces have signs.** Two initials in a box says "row in a database". LostEra has a cracked crown,
+Atelier Nord a compass over a studio grid, The Reading Room an open book; the discovery spaces have
+their own. Space rows in the chat list now show the space's emblem rather than whichever mask of
+yours happens to be posting there, which was the actual bug behind "the logos are ugly".
+
+**Badges look earned.** A hexagonal crest, a drawn mark per badge, and a treatment per kind:
+seasonal struck from warm metal, community from the mask's own colour, and the secret one
+deliberately obscured — you can see there is something there and not what it is.
+
+**Now playing shows the sleeve**, plus artist, album, elapsed/duration and a progress bar. A music
+glyph was a placeholder wearing a costume.
+
+**The mobile bug was the important one.** Switching masks is the product's headline feature and on
+a phone it had no reachable entry point at all: the rail is hidden below `md`, Cmd+I is a chord no
+phone has, and the only other route was finding it inside the palette. There are now three, in
+descending order of discoverability: a mask button at the head of every top-level mobile screen (the
+same position the rail avatar occupies on desktop), the "You" tab rendering your actual mask instead
+of a generic person glyph, and an explicit "Switch mask" button on the profile. "New mask" sits in
+the switcher's sheet footer, above the safe area.
+
+**P6 gate:** typecheck, lint and build clean. `npm run audit:color` still passes the two-hue rule on
+all 32 viewports — imagery excluded, chrome unchanged. `npm run audit:mobile` still passes all three
+P4 checks. Full manifest re-shot at 360, 390, 430 and 1440.

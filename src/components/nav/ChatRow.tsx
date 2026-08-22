@@ -1,14 +1,19 @@
 import { BellOff, Pin } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import { cx } from '../../lib/cx'
+import { communityOfChannel } from '../../mock/communities'
 import type { ChatRow as ChatRowData } from '../../mock/types'
 import { MaskAvatar, MaskStack } from '../identity/MaskAvatar'
 import { EmberRing } from '../time'
 import { SealGlyph } from '../trust/Glyphs'
 import { Murmur } from './Murmur'
+import { SpaceEmblem } from './SpaceEmblem'
 
 export function ChatRow({ row, to, active }: { row: ChatRowData; to: string; active?: boolean }) {
   const dimmed = row.muted
+  // A room in a space is identified by the space, not by whichever mask of
+  // yours happens to be posting in it.
+  const community = row.folder === 'spaces' ? communityOfChannel(row.threadId) : undefined
 
   return (
     <NavLink
@@ -20,7 +25,15 @@ export function ChatRow({ row, to, active }: { row: ChatRowData; to: string; act
       )}
     >
       <div className="relative shrink-0">
-        {row.groupMaskIds?.length ? (
+        {community ? (
+          <SpaceEmblem
+            id={community.id}
+            hue={community.hue}
+            fallback={community.icon}
+            size={36}
+            radius={9}
+          />
+        ) : row.groupMaskIds?.length ? (
           <MaskStack maskIds={row.groupMaskIds} size={22} max={3} />
         ) : (
           <MaskAvatar maskId={row.avatarMaskId} size={36} />
@@ -82,13 +95,7 @@ export function ChatRow({ row, to, active }: { row: ChatRowData; to: string; act
           </span>
         </div>
 
-        {row.murmur ? (
-          <Murmur
-            intensity={row.murmur}
-            width={28}
-            className="mt-1"
-          />
-        ) : null}
+        {row.murmur ? <Murmur intensity={row.murmur} width={28} className="mt-1" /> : null}
       </div>
     </NavLink>
   )

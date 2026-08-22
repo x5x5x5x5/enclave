@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Reorder, useDragControls } from 'framer-motion'
 import type { DragControls } from 'framer-motion'
-import { ArrowDown, ArrowUp, Eye, EyeOff, GripVertical, Music, Pencil, Share2 } from 'lucide-react'
+import { ArrowDown, ArrowUp, Eye, EyeOff, GripVertical, Pencil, Share2, Users } from 'lucide-react'
 import { cx } from '../../lib/cx'
 import { Screen } from '../../components/shell/Screen'
 import { useIsMobile } from '../../lib/useMediaQuery'
@@ -17,6 +17,7 @@ import { Chip } from '../../components/primitives/Chip'
 import { Segmented, Toggle } from '../../components/primitives/Controls'
 import { MaskAvatar } from '../../components/identity/MaskAvatar'
 import { SocialCard } from '../../components/social/SocialCard'
+import { AlbumArt } from '../../components/social/AlbumArt'
 import { AuraMeter, BadgeTile, ReputationLaurel } from '../../components/social/Stats'
 import { ZkBadge } from '../../components/trust'
 
@@ -222,7 +223,7 @@ export function ProfileScreen() {
         )
       case 'badges':
         return shell(
-          <div className="grid grid-cols-3 gap-2 sm:grid-cols-2">
+          <div className="grid grid-cols-3 gap-2 lg:grid-cols-4">
             {SOCIAL.reputation.badges
               .filter((b) => (audience === 'self' ? true : b.kind !== 'secret'))
               .map((b) => (
@@ -233,12 +234,28 @@ export function ProfileScreen() {
       case 'nowPlaying':
         return shell(
           <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-[8px] border border-[var(--line)] bg-ink-2 text-mid">
-              <Music size={16} strokeWidth={1.5} />
-            </span>
-            <div className="min-w-0">
-              <p className="truncate text-14 text-hi">{PROFILE_BLOCKS.nowPlaying.title}</p>
-              <p className="truncate text-12 text-low">{PROFILE_BLOCKS.nowPlaying.context}</p>
+            <AlbumArt seed={PROFILE_BLOCKS.nowPlaying.album + PROFILE_BLOCKS.nowPlaying.artist} size={56} />
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-14 text-hi">{PROFILE_BLOCKS.nowPlaying.track}</p>
+              <p className="truncate text-13 text-mid">
+                {PROFILE_BLOCKS.nowPlaying.artist}
+                <span className="text-low"> · {PROFILE_BLOCKS.nowPlaying.album}</span>
+              </p>
+              <div className="mt-2 flex items-center gap-2">
+                <span className="mono-num shrink-0 text-12 text-low">
+                  {PROFILE_BLOCKS.nowPlaying.elapsed}
+                </span>
+                <span className="h-0.5 flex-1 overflow-hidden rounded-full bg-[var(--line)]">
+                  <span
+                    className="block h-full rounded-full bg-accent"
+                    style={{ width: `${PROFILE_BLOCKS.nowPlaying.progress * 100}%` }}
+                  />
+                </span>
+                <span className="mono-num shrink-0 text-12 text-low">
+                  {PROFILE_BLOCKS.nowPlaying.duration}
+                </span>
+              </div>
+              <p className="mt-1 truncate text-12 text-low">{PROFILE_BLOCKS.nowPlaying.context}</p>
             </div>
           </div>,
         )
@@ -315,7 +332,16 @@ export function ProfileScreen() {
             ))}
           </div>
 
-          <div className="flex flex-wrap gap-2 md:shrink-0">
+          {/* A 2+1 grid on a phone: three buttons wrapping 2-then-1 looked broken. */}
+          <div className="grid w-full grid-cols-2 gap-2 md:flex md:w-auto md:shrink-0 md:flex-wrap">
+            <Button
+              variant="quiet"
+              size="md"
+              icon={<Users size={15} strokeWidth={1.5} />}
+              onClick={() => openOverlay('mask-switcher')}
+            >
+              Switch mask
+            </Button>
             <Button
               variant="quiet"
               size="md"
@@ -327,10 +353,11 @@ export function ProfileScreen() {
             <Button
               variant={editing ? 'solid' : 'quiet'}
               size="md"
+              className="col-span-2 md:col-span-1"
               icon={<Pencil size={15} strokeWidth={1.5} />}
               onClick={() => setEditing((e) => !e)}
             >
-              {editing ? 'Done' : 'Edit'}
+              {editing ? 'Done editing' : 'Edit profile'}
             </Button>
           </div>
         </header>

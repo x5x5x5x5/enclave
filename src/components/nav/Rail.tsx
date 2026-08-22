@@ -10,6 +10,7 @@ import { useWorld } from '../../state/world'
 import { MaskAvatar } from '../identity/MaskAvatar'
 import { Tooltip } from '../primitives/Overlay'
 import { Murmur } from './Murmur'
+import { SpaceEmblem } from './SpaceEmblem'
 
 function RailTile({
   to,
@@ -96,14 +97,14 @@ export function Rail() {
                 aria-label={c.name}
                 onClick={() => navigate(`/space/${c.id}`)}
                 className={cx(
-                  'flex h-11 w-11 items-center justify-center rounded-card border font-display text-13 tracking-tight transition-[background-color,border-color,color] duration-[var(--dur-std)]',
+                  'flex h-11 w-11 items-center justify-center rounded-card transition-[box-shadow,opacity] duration-[var(--dur-std)]',
                   isActive
-                    ? 'border-[color:var(--accent-line)] bg-accent-soft text-accent'
-                    : 'border-transparent bg-ink-1 text-mid hover:border-[var(--line)] hover:bg-ink-2 hover:text-hi',
+                    ? 'opacity-100 shadow-[0_0_0_2px_var(--accent)]'
+                    : 'opacity-70 hover:opacity-100',
                 )}
               >
                 <Tooltip side="right" label={`${c.name} · ${c.memberEstimate}`}>
-                  {c.icon}
+                  <SpaceEmblem id={c.id} hue={c.hue} fallback={c.icon} size={44} />
                 </Tooltip>
               </button>
               <Murmur intensity={demoMode ? Math.min(1, c.murmur + 0.1) : c.murmur} />

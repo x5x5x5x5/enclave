@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Screen } from '../../components/shell/Screen'
+import { MaskButton } from '../../components/identity/MaskButton'
+import { SpaceEmblem } from '../../components/nav/SpaceEmblem'
 import { Search } from 'lucide-react'
 import { DISCOVERY, DISCOVERY_CATEGORIES } from '../../mock/discovery'
 import type { DiscoverySpace } from '../../mock/types'
@@ -97,7 +99,10 @@ export function DiscoverScreen() {
     <Screen gutter={false} contentClassName="px-[var(--gutter)]">
       <div className="mx-auto w-full max-w-4xl py-6">
         <header>
-          <h1 className="font-display text-24 text-hi">Discover</h1>
+          <div className="flex min-w-0 items-center gap-2">
+            <MaskButton className="md:hidden" />
+            <h1 className="truncate font-display text-24 text-hi">Discover</h1>
+          </div>
           <p className="mt-1 max-w-xl text-13 leading-relaxed text-mid">
             Every space says what it will ask of you before you knock. Sizes are approximate on
             purpose.
@@ -133,12 +138,7 @@ export function DiscoverScreen() {
             {spaces.map((s) => (
               <Card key={s.id} className="flex flex-col p-4">
                 <div className="flex items-start gap-3">
-                  <span
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-card border bg-ink-2 font-display text-13 text-mid"
-                    style={{ borderColor: `rgb(var(--hue-${s.hue}-rgb) / 0.35)` }}
-                  >
-                    {s.icon}
-                  </span>
+                  <SpaceEmblem id={s.id} hue={s.hue} fallback={s.icon} size={44} radius={10} />
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-display text-17 text-hi">{s.name}</p>
                     <p className="mt-0.5 text-13 leading-relaxed text-mid">{s.oneLiner}</p>

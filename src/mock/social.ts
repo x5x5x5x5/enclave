@@ -71,7 +71,15 @@ export const SOCIAL: SocialStats = {
 export const PROFILE_BLOCKS = {
   about:
     'Raid lead in LostEra, occasional poster in Atelier Nord. I keep unsociable hours and answer eventually.',
-  nowPlaying: { title: 'Low Roar — Give Me An Answer', context: 'On repeat since Tuesday' },
+  nowPlaying: {
+    track: 'Give Me An Answer',
+    artist: 'Low Roar',
+    album: '0',
+    context: 'On repeat since Tuesday',
+    elapsed: '2:14',
+    duration: '4:38',
+    progress: 0.48,
+  },
   projects: [
     { name: 'Season 4 route notes', note: 'Living document · shared with Raiders' },
     { name: 'Kiln photos', note: 'Slow archive · shared with Mira' },

@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { fnv1a } from '../../lib/hash'
 import { cx } from '../../lib/cx'
+import { HUES } from '../../mock/world'
 
 /**
  * The prototype paints its own media. Every attachment gets a deterministic
@@ -19,13 +20,15 @@ export function MediaArt({
   const art = useMemo(() => {
     const h = fnv1a(seed)
     const pick = (n: number, salt: number) => (fnv1a(seed + salt) >>> 3) % n
+    const hueA = HUES[pick(HUES.length, 1)]
+    const hueB = HUES[pick(HUES.length, 7)]
     const variant = h % 5
     const angle = 20 + (pick(140, 3) || 0)
     const bands = 3 + pick(4, 11)
-    return { variant, angle, bands, pick }
+    return { hueA, hueB, variant, angle, bands, pick }
   }, [seed])
 
-  const { variant, angle, bands, pick } = art
+  const { hueA, hueB, variant, angle, bands, pick } = art
 
   return (
     <svg
@@ -33,13 +36,14 @@ export function MediaArt({
       preserveAspectRatio="xMidYMid slice"
       className={cx('block h-full w-full', rounded && 'rounded-[8px]', className)}
       aria-hidden="true"
+      data-imagery="true"
     >
       <defs>
         {/* Ink, with one faint wash of the active accent. Media should read as
             a photograph in a dark room, not as a second palette. */}
         <linearGradient id={`g-${seed}`} gradientTransform={`rotate(${angle})`}>
-          <stop offset="0%" stopColor="rgb(var(--text-hi-rgb) / .10)" />
-          <stop offset="100%" stopColor="rgb(var(--ink-0-rgb) / .35)" />
+          <stop offset="0%" stopColor={`rgb(var(--hue-${hueA}-vivid-rgb) / .5)`} />
+          <stop offset="100%" stopColor={`rgb(var(--hue-${hueB}-vivid-rgb) / .16)`} />
         </linearGradient>
         <linearGradient id={`f-${seed}`} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="rgb(11 14 19 / 0)" />
@@ -49,7 +53,7 @@ export function MediaArt({
 
       <rect width="160" height="120" fill="var(--ink-2)" />
       <rect width="160" height="120" fill={`url(#g-${seed})`} />
-      <rect width="160" height="120" fill="rgb(var(--accent-rgb) / .05)" />
+
 
       {variant === 0 &&
         Array.from({ length: bands }).map((_, i) => (

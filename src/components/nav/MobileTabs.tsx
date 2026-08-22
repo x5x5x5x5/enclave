@@ -1,18 +1,24 @@
 import { NavLink, useLocation } from 'react-router-dom'
-import { Layers, MessagesSquare, Plus, User, Vault } from 'lucide-react'
+import { Layers, MessagesSquare, Plus, Vault } from 'lucide-react'
+import { useApp } from '../../state/app'
+import { MaskAvatar } from '../identity/MaskAvatar'
 import { cx } from '../../lib/cx'
 import { useUi } from '../../state/ui'
 
-const tabs = [
+type TabIcon = typeof MessagesSquare
+
+/** `icon: null` on You — that tab shows your actual mask instead of a glyph. */
+const tabs: { to: string | null; label: string; icon: TabIcon | null }[] = [
   { to: '/chats', label: 'Chats', icon: MessagesSquare },
   { to: '/spaces', label: 'Spaces', icon: Layers },
   { to: null, label: 'New', icon: Plus },
   { to: '/vault', label: 'Vault', icon: Vault },
-  { to: '/you', label: 'You', icon: User },
+  { to: '/you', label: 'You', icon: null },
 ]
 
 export function MobileTabs() {
   const openOverlay = useUi((s) => s.openOverlay)
+  const activeMaskId = useApp((s) => s.activeMaskId)
   const location = useLocation()
 
   return (
@@ -22,7 +28,7 @@ export function MobileTabs() {
     >
       {tabs.map((t) => {
         const Icon = t.icon
-        if (!t.to) {
+        if (!t.to && Icon) {
           return (
             <button
               key={t.label}
@@ -36,6 +42,7 @@ export function MobileTabs() {
             </button>
           )
         }
+        if (!t.to) return null
         const active = location.pathname.startsWith(t.to)
         return (
           <NavLink
@@ -46,7 +53,12 @@ export function MobileTabs() {
               active ? 'text-accent' : 'text-low',
             )}
           >
-            <Icon size={19} strokeWidth={1.5} />
+            {Icon ? (
+              <Icon size={19} strokeWidth={1.5} />
+            ) : (
+              /* Your face, not a generic person glyph: identity is always on screen. */
+              <MaskAvatar maskId={activeMaskId} size={20} presence={false} ring={false} />
+            )}
             {t.label}
           </NavLink>
         )

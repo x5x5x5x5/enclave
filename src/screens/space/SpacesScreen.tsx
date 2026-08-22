@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { Screen } from '../../components/shell/Screen'
+import { MaskButton } from '../../components/identity/MaskButton'
 import { Compass } from 'lucide-react'
 import { COMMUNITIES } from '../../mock/communities'
 import { useWorld } from '../../state/world'
@@ -8,6 +9,7 @@ import { Card } from '../../components/primitives/EmptyState'
 import { Chip } from '../../components/primitives/Chip'
 import { IdentityChip } from '../../components/identity/IdentityChip'
 import { Murmur } from '../../components/nav/Murmur'
+import { SpaceEmblem } from '../../components/nav/SpaceEmblem'
 import { FuzzedCount } from '../../components/trust'
 import { ZkGlyph } from '../../components/trust/Glyphs'
 
@@ -20,7 +22,10 @@ export function SpacesScreen() {
     <Screen gutter={false} contentClassName="px-[var(--gutter)]">
       <div className="mx-auto w-full max-w-3xl py-6">
         <header className="mb-5 flex items-center justify-between gap-3">
-          <h1 className="font-display text-24 text-hi">Spaces</h1>
+          <div className="flex min-w-0 items-center gap-2">
+            <MaskButton className="md:hidden" />
+            <h1 className="truncate font-display text-24 text-hi">Spaces</h1>
+          </div>
           <Button
             variant="quiet"
             size="sm"
@@ -38,12 +43,7 @@ export function SpacesScreen() {
                 onClick={() => navigate(`/space/${c.id}`)}
                 className="flex w-full items-start gap-3 text-left"
               >
-                <span
-                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-card border bg-ink-2 font-display text-13 text-mid"
-                  style={{ borderColor: `rgb(var(--hue-${c.hue}-rgb) / 0.35)` }}
-                >
-                  {c.icon}
-                </span>
+                <SpaceEmblem id={c.id} hue={c.hue} fallback={c.icon} size={48} radius={10} />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-display text-17 text-hi">{c.name}</span>
                   <span className="mt-0.5 block text-13 leading-relaxed text-mid">{c.blurb}</span>
