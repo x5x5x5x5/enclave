@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, Check } from 'lucide-react'
 import { cx } from '../../lib/cx'
+import { Screen } from '../../components/shell/Screen'
 import { clock, shortStamp } from '../../lib/time'
 import { maskById } from '../../mock/masks'
 import { useApp } from '../../state/app'
@@ -41,8 +42,8 @@ export function ModQueueScreen() {
   }
 
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto bg-ink-0">
-      <div className="mx-auto w-full max-w-3xl px-4 py-6 md:px-8">
+    <Screen gutter={false} contentClassName="px-[var(--gutter)]">
+      <div className="mx-auto w-full max-w-3xl py-6">
         <header className="flex items-start gap-3">
           <IconButton label="Back" onClick={() => navigate('/space/c-lostera')}>
             <ArrowLeft size={18} strokeWidth={1.5} />
@@ -192,6 +193,6 @@ export function ModQueueScreen() {
           )}
         </div>
       </div>
-    </div>
+    </Screen>
   )
 }

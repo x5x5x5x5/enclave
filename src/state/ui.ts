@@ -36,6 +36,8 @@ export interface ReportDraft {
 interface UiState {
   toasts: Toast[]
   report: ReportDraft | null
+  /** The message the composer is currently quoting, if any. */
+  replyTo: { roomId: string; messageId: string } | null
   overlay: OverlayId | null
   overlayPayload: unknown
   rightPanel: 'members' | 'thread' | 'profile' | null
@@ -52,6 +54,9 @@ interface UiState {
   setRightPanel: (p: UiState['rightPanel']) => void
   setMobileNav: (open: boolean) => void
 
+  setReplyTo: (roomId: string, messageId: string) => void
+  clearReplyTo: () => void
+
   startReport: (roomId: string, seedMessageId?: string) => void
   toggleReportSelection: (messageId: string) => void
   setReportStep: (step: 1 | 2 | 3) => void
@@ -64,6 +69,7 @@ let toastSeq = 0
 export const useUi = create<UiState>((set, get) => ({
   toasts: [],
   report: null,
+  replyTo: null,
   overlay: null,
   overlayPayload: undefined,
   rightPanel: 'members',
@@ -92,6 +98,9 @@ export const useUi = create<UiState>((set, get) => ({
 
   setRightPanel: (p) => set({ rightPanel: p }),
   setMobileNav: (open) => set({ mobileNav: open }),
+
+  setReplyTo: (roomId, messageId) => set({ replyTo: { roomId, messageId } }),
+  clearReplyTo: () => set({ replyTo: null }),
 
   /* Reporting starts in the stream: you pick the exact messages mods will see. */
   startReport: (roomId, seedMessageId) =>

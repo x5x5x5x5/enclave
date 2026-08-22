@@ -163,7 +163,7 @@ export function UndoSendBar({
       </div>
       <button
         onClick={onUndo}
-        className="rounded-[4px] px-1.5 py-0.5 text-12 text-accent transition-colors hover:bg-accent-soft"
+        className="min-h-11 shrink-0 md:min-h-9 rounded-chip px-2.5 text-13 text-accent transition-colors hover:bg-accent-soft"
       >
         Undo
       </button>

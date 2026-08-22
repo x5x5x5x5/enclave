@@ -31,6 +31,10 @@ export function Tabs<T extends string>({
         variant === 'underline' && 'hairline-b',
         className,
       )}
+      style={{
+        maskImage: 'linear-gradient(to right, black calc(100% - 24px), transparent)',
+        WebkitMaskImage: 'linear-gradient(to right, black calc(100% - 24px), transparent)',
+      }}
       onKeyDown={(e) => {
         if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return
         e.preventDefault()
@@ -49,7 +53,7 @@ export function Tabs<T extends string>({
             tabIndex={active ? 0 : -1}
             onClick={() => onChange(t.id)}
             className={cx(
-              'relative shrink-0 whitespace-nowrap transition-colors duration-[var(--dur-micro)] max-md:min-h-11',
+              'relative shrink-0 whitespace-nowrap transition-colors duration-[var(--dur-micro)] max-md:min-h-11 max-md:min-w-11',
               variant === 'underline'
                 ? cx(
                     'px-3 py-2 text-13',

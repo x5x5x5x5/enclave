@@ -85,6 +85,9 @@
   --fs-13: 0.8125rem;
   --fs-14: 0.875rem;
   --fs-15: 0.9375rem;
+  /* 16px exists only so inputs never trigger iOS zoom-on-focus. It is not a
+     display size — see NOTES.md, P4. */
+  --fs-16: 1rem;
   --fs-17: 1.0625rem;
   --fs-20: 1.25rem;
   --fs-24: 1.5rem;
@@ -115,6 +118,17 @@
   --dur-overlay: 320ms;
   --dur-mask: 250ms;
 
+  /* ---- Safe areas & gutters -------------------------------------------- */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  /* One gutter for every mobile screen, so spacing cannot drift between them. */
+  --gutter: 16px;
+
+  /* Set at runtime by useKeyboardInset(); 0 when no soft keyboard is open. */
+  --keyboard-inset: 0px;
+
   /* ---- Shell metrics --------------------------------------------------- */
   --rail-w: 72px;
   --list-w: 264px;
@@ -132,6 +146,12 @@
 }
 
 /* ---- Density ----------------------------------------------------------- */
+@media (min-width: 768px) {
+  :root {
+    --gutter: 24px;
+  }
+}
+
 [data-density='compact'] {
   --atm-row-pad: 3px;
   --atm-chat-leading: 1.45;

@@ -52,7 +52,7 @@ export function ChipButton({
   return (
     <button
       className={cx(
-        'inline-flex shrink-0 items-center gap-1.5 rounded-chip border px-2.5 py-1 text-13 transition-colors duration-[var(--dur-micro)] max-md:min-h-9',
+        'inline-flex shrink-0 items-center gap-1.5 rounded-chip border px-2.5 py-1 text-13 transition-colors duration-[var(--dur-micro)] max-md:min-h-11 max-md:min-w-11',
         selected
           ? 'border-[color:var(--accent-line)] bg-accent-soft text-accent'
           : tones[tone] + ' hover:bg-ink-3 hover:text-hi',

@@ -12,7 +12,7 @@ function MemberRow({ maskId }: { maskId: string }) {
   return (
     <button
       onClick={() => openOverlay('space-preview', { maskId })}
-      className="flex w-full items-center gap-2.5 rounded-chip px-2 py-1.5 text-left transition-colors hover:bg-ink-2"
+      className="flex min-h-12 w-full items-center gap-2.5 rounded-chip px-2 py-1.5 text-left transition-colors hover:bg-ink-2 md:min-h-0"
       style={{ fontSize: 'var(--atm-list-size)', lineHeight: 'var(--atm-list-leading)' }}
     >
       <MaskAvatar maskId={maskId} size={26} />
@@ -39,7 +39,7 @@ export function MemberPanel({ roomId }: { roomId: string }) {
           <p className="font-display text-13 text-hi">Members</p>
           <FuzzedCount value={community.memberEstimate} />
         </header>
-        <div className="min-h-0 flex-1 overflow-y-auto px-1.5 py-2">
+        <div className="scroll-area min-h-0 flex-1 px-1.5 py-2">
           {community.roles.map((role) => (
             <div key={role.id} className="mb-3">
               <SectionLabel className="mb-1 px-2">
@@ -64,7 +64,7 @@ export function MemberPanel({ roomId }: { roomId: string }) {
         <p className="font-display text-13 text-hi">In this room</p>
         {room?.subtitle ? <span className="text-12 text-low">{room.subtitle}</span> : null}
       </header>
-      <div className="min-h-0 flex-1 overflow-y-auto px-1.5 py-2">
+      <div className="scroll-area min-h-0 flex-1 px-1.5 py-2">
         {(room?.memberMaskIds ?? []).map((id) => (
           <MemberRow key={id} maskId={id} />
         ))}

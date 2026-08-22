@@ -1,6 +1,10 @@
 import { useMemo, useState } from 'react'
+import { Reorder, useDragControls } from 'framer-motion'
+import type { DragControls } from 'framer-motion'
 import { ArrowDown, ArrowUp, Eye, EyeOff, GripVertical, Music, Pencil, Share2 } from 'lucide-react'
 import { cx } from '../../lib/cx'
+import { Screen } from '../../components/shell/Screen'
+import { useIsMobile } from '../../lib/useMediaQuery'
 import { BRAND } from '../../config/brand'
 import { maskById } from '../../mock/masks'
 import { AUDIENCES, AUDIENCE_KNOWS, AUDIENCE_VISIBILITY, PROFILE_BLOCKS, SOCIAL } from '../../mock/social'
@@ -32,6 +36,22 @@ const BLOCK_TITLES: Record<BlockId, string> = {
 const DEFAULT_LEFT: BlockId[] = ['about', 'badges', 'projects', 'links']
 const DEFAULT_RIGHT: BlockId[] = ['aura', 'reputation', 'nowPlaying', 'spaces']
 
+/**
+ * On a phone the bento is one column, and a two-column grid stacked in column
+ * order reads wrong: you would get every left block before any right one. This
+ * is the reading order a single column should have.
+ */
+const MOBILE_ORDER: BlockId[] = [
+  'aura',
+  'reputation',
+  'about',
+  'badges',
+  'nowPlaying',
+  'projects',
+  'spaces',
+  'links',
+]
+
 function BlockShell({
   id,
   title,
@@ -41,6 +61,7 @@ function BlockShell({
   onUp,
   onDown,
   children,
+  dragControls,
 }: {
   id: BlockId
   title: string
@@ -50,6 +71,8 @@ function BlockShell({
   onUp: () => void
   onDown: () => void
   children: React.ReactNode
+  /** Present on touch: the grip becomes a real drag handle. */
+  dragControls?: DragControls
 }) {
   return (
     <Card
@@ -61,8 +84,12 @@ function BlockShell({
     >
       <div className="mb-3 flex items-center gap-2">
         {editing ? (
-          <span className="cursor-grab text-low" title="Drag to reorder">
-            <GripVertical size={14} strokeWidth={1.5} />
+          <span
+            className="flex cursor-grab touch-none items-center justify-center text-low active:cursor-grabbing max-md:h-11 max-md:w-11"
+            title="Drag to reorder"
+            onPointerDown={(e) => dragControls?.start(e)}
+          >
+            <GripVertical size={16} strokeWidth={1.5} />
           </span>
         ) : null}
         <SectionLabel className="flex-1 px-0">{title}</SectionLabel>
@@ -90,17 +117,50 @@ function BlockShell({
   )
 }
 
+/** One reorderable block on a phone: the grip drives the drag, not the card. */
+function DraggableBlock({
+  id,
+  render,
+  order,
+  setOrder,
+}: {
+  id: BlockId
+  render: (
+    id: BlockId,
+    column: BlockId[],
+    setColumn: (v: BlockId[]) => void,
+    dragControls?: DragControls,
+  ) => React.ReactNode
+  order: BlockId[]
+  setOrder: (v: BlockId[]) => void
+}) {
+  const controls = useDragControls()
+  return (
+    <Reorder.Item
+      value={id}
+      dragListener={false}
+      dragControls={controls}
+      whileDrag={{ scale: 1.02 }}
+      className="list-none"
+    >
+      {render(id, order, setOrder, controls)}
+    </Reorder.Item>
+  )
+}
+
 export function ProfileScreen() {
   const activeMaskId = useApp((s) => s.activeMaskId)
   const statsOptedIn = useApp((s) => s.statsOptedIn)
   const setStatsOptedIn = useApp((s) => s.setStatsOptedIn)
   const openOverlay = useUi((s) => s.openOverlay)
   const later = useUi((s) => s.later)
+  const isMobile = useIsMobile()
 
   const [editing, setEditing] = useState(false)
   const [audience, setAudience] = useState<AudienceId>('self')
   const [left, setLeft] = useState<BlockId[]>(DEFAULT_LEFT)
   const [right, setRight] = useState<BlockId[]>(DEFAULT_RIGHT)
+  const [mobileOrder, setMobileOrder] = useState<BlockId[]>(MOBILE_ORDER)
   const [hidden, setHidden] = useState<BlockId[]>([])
 
   const knows = AUDIENCE_KNOWS[audience]
@@ -128,7 +188,12 @@ export function ProfileScreen() {
     setColumn(next)
   }
 
-  const renderBlock = (id: BlockId, column: BlockId[], setColumn: (v: BlockId[]) => void) => {
+  const renderBlock = (
+    id: BlockId,
+    column: BlockId[],
+    setColumn: (v: BlockId[]) => void,
+    dragControls?: DragControls,
+  ) => {
     if (!visible(id) && !editing) return null
     if (!visible(id) && editing && audience !== 'self') return null
 
@@ -144,6 +209,7 @@ export function ProfileScreen() {
         }
         onUp={() => move(column, setColumn, id, -1)}
         onDown={() => move(column, setColumn, id, 1)}
+        dragControls={dragControls}
       >
         {children}
       </BlockShell>
@@ -156,7 +222,7 @@ export function ProfileScreen() {
         )
       case 'badges':
         return shell(
-          <div className="grid gap-2 sm:grid-cols-2">
+          <div className="grid grid-cols-3 gap-2 sm:grid-cols-2">
             {SOCIAL.reputation.badges
               .filter((b) => (audience === 'self' ? true : b.kind !== 'secret'))
               .map((b) => (
@@ -209,7 +275,7 @@ export function ProfileScreen() {
               <li key={l.label}>
                 <button
                   onClick={() => later('Opening links')}
-                  className="text-left text-14 text-accent hover:underline"
+                  className="min-h-11 text-left text-14 text-accent hover:underline md:min-h-0"
                 >
                   {l.label}
                 </button>
@@ -226,24 +292,30 @@ export function ProfileScreen() {
   }
 
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto bg-ink-0">
-      <div className="mx-auto w-full max-w-5xl px-4 py-6 md:px-8 md:py-8">
-        <header className="flex flex-wrap items-start gap-5">
-          <MaskAvatar maskId={mask.id} size={72} />
-          <div className="min-w-0 flex-1">
-            <h1 className="font-display text-30 leading-tight text-hi">
-              {knows.showHandle ? mask.displayName : 'Someone'}
-            </h1>
-            <p className="mono-num mt-0.5 text-13 text-low">
-              {knows.showHandle ? mask.handle : 'handle hidden from strangers'}
-            </p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {PROFILE_BLOCKS.proofs.map((p) => (
-                <ZkBadge key={p.label} label={p.label} note={p.note} />
-              ))}
+    <Screen gutter={false} contentClassName="px-[var(--gutter)]">
+      <div className="mx-auto w-full max-w-5xl py-6 md:py-8">
+        {/* Stacks on a phone: name row, proofs, then actions. Side by side they
+            squeezed the name block to nothing and the title ran under the buttons. */}
+        <header className="flex flex-col gap-4 md:flex-row md:flex-wrap md:items-start md:gap-5">
+          <div className="flex min-w-0 items-center gap-4 md:flex-1 md:items-start">
+            <MaskAvatar maskId={mask.id} size={64} className="md:h-[72px] md:w-[72px]" />
+            <div className="min-w-0 flex-1">
+              <h1 className="truncate font-display text-24 leading-tight text-hi md:text-30">
+                {knows.showHandle ? mask.displayName : 'Someone'}
+              </h1>
+              <p className="mono-num mt-0.5 truncate text-13 text-low">
+                {knows.showHandle ? mask.handle : 'handle hidden from strangers'}
+              </p>
             </div>
           </div>
-          <div className="flex shrink-0 flex-wrap gap-2">
+
+          <div className="order-3 flex flex-wrap gap-2 md:order-none md:hidden">
+            {PROFILE_BLOCKS.proofs.map((p) => (
+              <ZkBadge key={p.label} label={p.label} note={p.note} />
+            ))}
+          </div>
+
+          <div className="flex flex-wrap gap-2 md:shrink-0">
             <Button
               variant="quiet"
               size="md"
@@ -263,14 +335,21 @@ export function ProfileScreen() {
           </div>
         </header>
 
+        <div className="mt-3 hidden flex-wrap gap-2 md:flex">
+          {PROFILE_BLOCKS.proofs.map((p) => (
+            <ZkBadge key={p.label} label={p.label} note={p.note} />
+          ))}
+        </div>
+
         {editing ? (
-          <Card raised className="mt-5 p-4">
+          <Card raised className="sticky top-0 z-20 mt-5 p-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
+              <div className="min-w-0 flex-1">
                 <SectionLabel className="px-0">Audience lens</SectionLabel>
                 <p className="mt-1 max-w-md text-12 leading-relaxed text-mid">{knows.note}</p>
               </div>
               <Segmented
+                className="w-full md:w-auto"
                 ariaLabel="View profile as"
                 options={AUDIENCES.map((a) => ({ id: a.id, label: a.label }))}
                 value={audience}
@@ -307,12 +386,40 @@ export function ProfileScreen() {
           </Card>
         ) : null}
 
-        <div className="mt-5 grid gap-3 md:grid-cols-2">
-          <div className="flex flex-col gap-3">{left.map((id) => renderBlock(id, left, setLeft))}</div>
-          <div className="flex flex-col gap-3">
-            {right.map((id) => renderBlock(id, right, setRight))}
+        {isMobile ? (
+          editing ? (
+            /* Drag by the grip, so a vertical drag on the card itself still scrolls. */
+            <Reorder.Group
+              axis="y"
+              values={mobileOrder}
+              onReorder={setMobileOrder}
+              className="mt-4 flex list-none flex-col gap-3"
+            >
+              {mobileOrder.map((id) => (
+                <DraggableBlock
+                  key={id}
+                  id={id}
+                  render={renderBlock}
+                  order={mobileOrder}
+                  setOrder={setMobileOrder}
+                />
+              ))}
+            </Reorder.Group>
+          ) : (
+            <div className="mt-4 flex flex-col gap-3">
+              {mobileOrder.map((id) => renderBlock(id, mobileOrder, setMobileOrder))}
+            </div>
+          )
+        ) : (
+          <div className="mt-5 grid gap-3 md:grid-cols-2">
+            <div className="flex flex-col gap-3">
+              {left.map((id) => renderBlock(id, left, setLeft))}
+            </div>
+            <div className="flex flex-col gap-3">
+              {right.map((id) => renderBlock(id, right, setRight))}
+            </div>
           </div>
-        </div>
+        )}
 
         <p className="mt-6 text-center text-12 text-low">
           {BRAND.name} shows each audience a different profile because each audience met a different
@@ -321,6 +428,6 @@ export function ProfileScreen() {
       </div>
 
       <SocialCard />
-    </div>
+    </Screen>
   )
 }

@@ -57,7 +57,7 @@ export function SecuritySection() {
                   <p className="mt-0.5 text-12 text-low">
                     {s.platform} · last seen {shortStamp(s.lastSeen)}
                   </p>
-                  <p className="mono-num mt-1 text-12 text-low">{s.fingerprint}</p>
+                  <p className="mono-num mt-1 truncate whitespace-nowrap text-12 text-low">{s.fingerprint}</p>
                 </div>
                 {!s.current && !isRevoked ? (
                   <Button

@@ -84,13 +84,13 @@ export function OnboardingScreen() {
             setOnboarded(true)
             navigate('/chats')
           }}
-          className="text-13 text-mid underline-offset-4 transition-colors hover:text-hi hover:underline"
+          className="min-h-11 px-1 text-13 text-mid underline-offset-4 transition-colors hover:text-hi hover:underline"
         >
           Just exploring? Enter the demo world
         </button>
       </header>
 
-      <div className="flex min-h-0 flex-1 items-center justify-center px-5 pb-10 md:px-8">
+      <div className="flex min-h-0 flex-1 items-center justify-center px-[var(--gutter)] pb-28 md:pb-10">
         <div className="w-full max-w-lg">
           <div className="mb-6 flex items-center gap-2">
             {steps.map((s, i) => (
@@ -149,7 +149,7 @@ export function OnboardingScreen() {
                       setIdeaIndex(next)
                       setLocalHandle(HANDLE_IDEAS[next])
                     }}
-                    className="mt-3 inline-flex items-center gap-1.5 rounded-chip border border-[var(--line)] px-2.5 py-1.5 text-13 text-mid transition-colors hover:bg-ink-2 hover:text-hi"
+                    className="mt-3 inline-flex min-h-11 items-center gap-1.5 rounded-chip border border-[var(--line)] px-3 text-13 text-mid transition-colors hover:bg-ink-2 hover:text-hi"
                   >
                     <Dices size={14} strokeWidth={1.5} /> Generate another
                   </button>
@@ -225,7 +225,7 @@ export function OnboardingScreen() {
                           aria-label={HUE_LABEL[h]}
                           title={HUE_LABEL[h]}
                           className={cx(
-                            'h-8 w-8 rounded-full transition-transform',
+                            'h-11 w-11 rounded-full transition-transform md:h-9 md:w-9',
                             hue === h ? 'scale-110 ring-2 ring-[color:var(--accent-glow)]' : '',
                           )}
                           style={{ background: `var(--hue-${h})` }}
@@ -319,7 +319,11 @@ export function OnboardingScreen() {
             ) : null}
           </motion.div>
 
-          <div className="mt-8 flex items-center gap-3">
+          {/* The CTA is pinned in the thumb zone on a phone, inline on desktop. */}
+          <div
+            className="mt-8 flex items-center gap-3 max-md:fixed max-md:inset-x-0 max-md:bottom-0 max-md:z-10 max-md:border-t max-md:border-[var(--line-soft)] max-md:bg-ink-0 max-md:px-[var(--gutter)] max-md:pt-3"
+            style={{ paddingBottom: 'calc(12px + var(--safe-bottom))' }}
+          >
             {step > 0 ? (
               <Button
                 variant="ghost"

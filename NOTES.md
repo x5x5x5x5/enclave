@@ -250,3 +250,78 @@ truncating to "fri…".
 **Final gate:** `tsc -b`, `eslint .` and `vite build` clean. 37 routes render with no runtime errors.
 Reduced motion verified to clamp transitions in the running app, both from the system preference and
 from the in-app override. Every out-of-scope control raises the "comes in a later phase" toast.
+
+---
+
+## P4 — Mobile excellence pass
+
+Ran as its own phase against `docs/MOBILE_PASS.md`: audit, then foundation, then screens, then
+proof. Desktop was the constraint, not the target — the 1440 screenshot set is unchanged apart from
+the composer, which improved for both.
+
+### The audit found more than the eye did
+
+`scripts/audit-mobile.mjs` walks 27 routes across 360×800, 390×844, 430×932 and 390×460 and
+measures four things a person cannot reliably eyeball: horizontal overflow, computed input
+font-size, touch-target geometry, and elements escaping the viewport. First run:
+
+- **0** routes with horizontal page scroll — the one thing that was already right.
+- **16** inputs under 16px, which is the iOS zoom-on-focus tell.
+- **103** distinct interactive elements under 44×44.
+- **1** genuine layout break: `/space/:id` rendered the channel column *and* the community home
+  side by side at phone widths, pushing the home off-screen into a 26px-wide sliver. That one was
+  invisible in the desktop screenshots and would have been easy to miss by eye at 390 too.
+
+Final run: **0, 0, 0**. `npm run audit:mobile` reproduces it and exits non-zero on the two
+non-negotiable rules (overflow, sub-16px inputs), so §8's automated check lives in the repo.
+
+### The foundation, built before any screen was touched
+
+- `--safe-top` / `--safe-bottom` / `--gutter` tokens. One gutter value for the whole app (16px on
+  phones, 24px from `md`), so spacing cannot drift screen by screen again.
+- `useKeyboardInset()` reads `window.visualViewport` — the only honest source, because on iOS the
+  layout viewport does not move when the keyboard opens. It also publishes `--keyboard-inset`, so
+  docked surfaces ride above the keyboard in pure CSS.
+- `<Screen>` owns gutter, safe areas and a contained scroll container. Adopted by the six full-page
+  screens; the column screens get the same guarantee through `ListColumn` / `MainColumn`.
+- `<Sheet>` is now a real bottom sheet: drag handle, drag-to-dismiss, two snap points, focus trap,
+  and a footer that clears both the safe area and the keyboard. **`Modal` delegates to it on
+  mobile**, which is the single highest-leverage line in this phase — the mask switcher, social
+  card, report flow, palette, sweep confirm and duress confirm all became sheets from one change,
+  with no `Mobile*` forks anywhere.
+- Global touch defaults: `touch-action: manipulation`, real `:active` states to replace the removed
+  tap highlight, `text-size-adjust`, `overflow-wrap: anywhere` on message bodies, and a media query
+  that puts every input at 16px below `md`.
+
+### The composer, rebuilt
+
+Five 44px targets and a readable field do not fit in 360px, so on a phone attach / expiry /
+schedule collapse behind one `＋` that opens a sheet. Active retention moved *inside* the pill's
+right edge instead of occupying a row above it. The pill is radius-full at one line and eases to
+the card radius as it grows to five lines, then scrolls internally. Send swaps to mic when the
+field is empty. The bottom tab bar is now hidden inside any room, which is what freed the vertical
+space to make this work.
+
+### Two things the brief asked for that turned into real features
+
+**Reply is no longer a toast.** Swipe-to-reply needed somewhere to put the quote, so `replyTo` went
+into the UI store, the composer grew a quote strip, and `send()` learned `replyToId`. The ⋯ menu
+item and the swipe now do the same real thing, and a `later()` stub disappeared.
+
+**Profile reorder drags by the grip, not the card.** framer's `Reorder` with `dragListener={false}`
+plus `useDragControls` started from the handle. Dragging the card itself would have fought the
+scroll container on a phone; dragging a handle does not, and the ↑ ↓ controls stay as the
+accessible path.
+
+### Corrections to my own audit
+
+One line in `MOBILE_AUDIT.md` was wrong when I wrote it: Discovery cards were never 2-up at 430
+(`sm:` starts at 640). It is struck through in place rather than deleted, because a checklist that
+quietly loses its mistakes is not a checklist.
+
+### P4 gate
+
+`tsc -b`, `eslint .` and `vite build` clean. `npm run audit:mobile` passes all three checks across
+27 routes × 4 viewports. Screenshot set covers the manifest at 360, 390, 430 and 1440, plus five
+mobile-only states: composer with the keyboard open, members sheet, profile edit with the lens
+active, mobile search, and the composer options sheet.

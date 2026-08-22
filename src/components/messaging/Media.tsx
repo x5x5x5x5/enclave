@@ -82,8 +82,9 @@ function ImageTile({ media, message, tall }: { media: Media; message: Message; t
           onPointerLeave={() => setHeld(false)}
           onKeyDown={(e) => e.key === ' ' && setHeld(true)}
           onKeyUp={() => setHeld(false)}
+          onContextMenu={(e) => e.preventDefault()}
           className={cx(
-            'absolute inset-0 flex flex-col items-center justify-center gap-2 text-center transition-colors',
+            'no-callout absolute inset-0 flex flex-col items-center justify-center gap-2 text-center transition-colors',
             held ? 'bg-transparent' : 'bg-[rgb(11_14_19/.42)]',
           )}
         >
@@ -208,7 +209,7 @@ function VoiceNote({ media, message }: { media: Media; message: Message }) {
         disabled={burned}
         aria-label={playing ? 'Pause voice note' : 'Play voice note'}
         className={cx(
-          'flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors',
+          'flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors md:h-9 md:w-9',
           burned
             ? 'bg-ink-3 text-low'
             : media.burnAfterListen

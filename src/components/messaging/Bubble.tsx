@@ -1,7 +1,16 @@
 import { useMemo, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { Bookmark, Clock, CornerUpLeft, Flag, MoreHorizontal, ShieldCheck } from 'lucide-react'
+import {
+  Bookmark,
+  Check,
+  Clock,
+  CornerUpLeft,
+  Flag,
+  MoreHorizontal,
+  ShieldCheck,
+} from 'lucide-react'
 import { cx } from '../../lib/cx'
+import { useIsTouch } from '../../lib/useMediaQuery'
 import { clock, humanDuration } from '../../lib/time'
 import { useNow } from '../../lib/useNow'
 import { maskById } from '../../mock/masks'
@@ -28,7 +37,7 @@ function TranslateStack({ message }: { message: Message }) {
     <div className="mt-1">
       <button
         onClick={() => toggleOriginal(message.id)}
-        className="text-12 text-low transition-colors hover:text-mid"
+        className="-mx-1 min-h-11 px-1 text-12 md:min-h-9 text-low transition-colors hover:text-mid"
       >
         Translated from {t.fromLang} — {shown ? 'hide original' : 'show original'}
       </button>
@@ -85,8 +94,8 @@ function Tombstone({ message }: { message: Message }) {
 /* -- Actions --------------------------------------------------------------- */
 
 function MessageActions({ message }: { message: Message }) {
-  const later = useUi((s) => s.later)
   const toast = useUi((s) => s.toast)
+  const setReplyTo = useUi((s) => s.setReplyTo)
   const saveToVault = useWorld((s) => s.saveToVault)
   const startReport = useUi((s) => s.startReport)
 
@@ -97,12 +106,12 @@ function MessageActions({ message }: { message: Message }) {
     <Popover
       side="bottom"
       align="end"
-      className="opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100"
+      className="opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100 md:focus-within:opacity-100"
       trigger={({ toggle }) => (
         <button
           aria-label="Message actions"
           onClick={toggle}
-          className="flex h-6 w-6 items-center justify-center rounded-chip border border-[var(--line)] bg-ink-1 text-low hover:text-hi"
+          className="flex h-11 w-11 items-center justify-center rounded-chip text-low hover:text-hi md:h-6 md:w-6 md:border md:border-[var(--line)] md:bg-ink-1"
         >
           <MoreHorizontal size={14} strokeWidth={1.5} />
         </button>
@@ -110,7 +119,13 @@ function MessageActions({ message }: { message: Message }) {
     >
       {(close) => (
         <div className="flex flex-col gap-0.5">
-          <button className={item} onClick={() => { close(); later('Replying') }}>
+          <button
+            className={item}
+            onClick={() => {
+              close()
+              setReplyTo(message.channelId, message.id)
+            }}
+          >
             <CornerUpLeft size={14} strokeWidth={1.5} /> Reply
           </button>
           <button
@@ -167,7 +182,7 @@ function MessageBody({ message, aged }: { message: Message; aged: boolean }) {
 
       {message.body ? (
         <p
-          className="whitespace-pre-wrap break-words text-hi"
+          className="prose-break whitespace-pre-wrap text-hi"
           style={{ fontSize: 'var(--atm-chat-size)', lineHeight: 'var(--atm-chat-leading)' }}
         >
           {message.body}
@@ -184,7 +199,7 @@ function MessageBody({ message, aged }: { message: Message; aged: boolean }) {
             setViewConsumed(true)
             consumeView(message.id)
           }}
-          className="mt-1.5 inline-flex"
+          className="mt-1.5 inline-flex max-md:min-h-11 max-md:items-center"
         >
           <Chip tone="ember">
             <span className="mono-num">{viewsLeft}</span>
@@ -257,6 +272,8 @@ export function StreamRow({
   const reduce = useReducedMotion()
   const author = maskById(message.authorMaskId)
   const activeMaskId = useApp((s) => s.activeMaskId)
+  const setReplyTo = useUi((s) => s.setReplyTo)
+  const isTouch = useIsTouch()
   const own = message.authorMaskId === activeMaskId
   const fraction = ageFraction(message, now)
   const aged = fraction !== undefined && fraction > 0.9
@@ -287,7 +304,28 @@ export function StreamRow({
             : undefined
       }
       onClick={selectable ? () => onSelect?.(message.id) : undefined}
+      drag={isTouch && !selectable ? 'x' : false}
+      dragDirectionLock
+      dragConstraints={{ left: 0, right: 0 }}
+      dragElastic={{ left: 0, right: 0.4 }}
+      onDragEnd={(_, info) => {
+        if (info.offset.x > 56) setReplyTo(message.channelId, message.id)
+      }}
     >
+      {selectable ? (
+        <span
+          aria-hidden="true"
+          className={cx(
+            'mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-[8px] border transition-colors',
+            selected
+              ? 'border-[color:var(--accent-line)] bg-accent text-[var(--ink-0)]'
+              : 'border-[var(--line)] bg-ink-1',
+          )}
+        >
+          {selected ? <Check size={15} strokeWidth={2.5} /> : null}
+        </span>
+      ) : null}
+
       <div className="w-8 shrink-0 pt-0.5">
         {!grouped ? (
           <MaskAvatar maskId={author.id} size={32} presence={false} />
@@ -325,6 +363,10 @@ export function StreamRow({
 export function BubbleRow({ message, grouped }: { message: Message; grouped?: boolean }) {
   const now = useNow(1000)
   const reduce = useReducedMotion()
+  const isTouch = useIsTouch()
+  const setReplyTo = useUi((s) => s.setReplyTo)
+  // On touch the stamp is noise until you ask for it.
+  const [showMeta, setShowMeta] = useState(false)
   const activeMaskId = useApp((s) => s.activeMaskId)
   const author = maskById(message.authorMaskId)
   const own = message.authorMaskId === activeMaskId
@@ -349,12 +391,24 @@ export function BubbleRow({ message, grouped }: { message: Message; grouped?: bo
         own ? 'flex-row-reverse' : 'flex-row',
         dissolving && 'animate-[ember-dissolve_320ms_var(--ease)_forwards]',
       )}
+      drag={isTouch ? 'x' : false}
+      dragDirectionLock
+      dragConstraints={{ left: 0, right: 0 }}
+      dragElastic={{ left: 0, right: 0.4 }}
+      onDragEnd={(_, info) => {
+        if (info.offset.x > 56) setReplyTo(message.channelId, message.id)
+      }}
     >
       <div className="w-7 shrink-0 self-end">
         {!grouped && !own ? <MaskAvatar maskId={author.id} size={28} presence={false} /> : null}
       </div>
 
-      <div className={cx('flex min-w-0 max-w-[min(560px,78%)] flex-col', own && 'items-end')}>
+      <div
+        className={cx(
+          'flex min-w-0 max-w-[85%] flex-col md:max-w-[min(560px,78%)]',
+          own && 'items-end',
+        )}
+      >
         <div
           className={cx(
             'rounded-card border px-3 py-2',
@@ -364,13 +418,16 @@ export function BubbleRow({ message, grouped }: { message: Message; grouped?: bo
             aged && 'opacity-75',
           )}
           style={dissolving ? { boxShadow: '0 0 0 1px var(--ember)' } : undefined}
+          onClick={() => isTouch && setShowMeta((v) => !v)}
         >
           <MessageBody message={message} aged={false} />
         </div>
-        <div className="mt-0.5 flex items-center gap-1.5 px-1">
-          <MessageMeta message={message} />
-          <MessageActions message={message} />
-        </div>
+        {!isTouch || showMeta ? (
+          <div className="mt-0.5 flex items-center gap-1.5 px-1">
+            <MessageMeta message={message} />
+            <MessageActions message={message} />
+          </div>
+        ) : null}
       </div>
     </motion.div>
   )
@@ -403,7 +460,7 @@ export function ScheduledRow({ message }: { message: Message }) {
             removeMessage(message.id)
             toast({ kind: 'neutral', title: 'Scheduled message cancelled' })
           }}
-          className="shrink-0 rounded-chip px-2 py-1 text-12 text-low hover:bg-ink-2 hover:text-hi"
+          className="min-h-11 shrink-0 rounded-chip px-3 text-13 text-low hover:bg-ink-2 hover:text-hi"
         >
           Cancel
         </button>

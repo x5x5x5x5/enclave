@@ -1,5 +1,7 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ArrowDown } from 'lucide-react'
 import { cx } from '../../lib/cx'
+import { useKeyboardInset } from '../../lib/useKeyboardInset'
 import { MINUTE, dayLabel } from '../../lib/time'
 import { maskById } from '../../mock/masks'
 import type { Message, Retention } from '../../mock/types'
@@ -71,6 +73,14 @@ export function MessageStream({
 }) {
   const messages = useWorld((s) => s.messages)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const [showJump, setShowJump] = useState(false)
+  const keyboard = useKeyboardInset()
+
+  const toBottom = useCallback((behavior: ScrollBehavior = 'auto') => {
+    const el = scrollRef.current
+    if (!el) return
+    el.scrollTo({ top: el.scrollHeight, behavior })
+  }, [])
 
   const rows = useMemo(
     () =>
@@ -96,18 +106,26 @@ export function MessageStream({
     if (nearBottom) el.scrollTop = el.scrollHeight
   }, [rows.length])
 
+  /* The keyboard opening must not push the last message out of view. */
+  useEffect(() => {
+    if (!showJump) toBottom()
+  }, [keyboard, showJump, toBottom])
+
   let lastDay = ''
   let lastAuthor = ''
   let lastTs = 0
 
   return (
-    <div
-      ref={scrollRef}
-      className={cx(
-        'min-h-0 flex-1 overflow-y-auto',
-        layout === 'bubbles' && 'pb-2',
-      )}
-    >
+    <div className="relative flex min-h-0 flex-1 flex-col">
+      <div
+        ref={scrollRef}
+        onScroll={(e) => {
+          const el = e.currentTarget
+          const fromBottom = el.scrollHeight - el.scrollTop - el.clientHeight
+          setShowJump(fromBottom > el.clientHeight * 2)
+        }}
+        className={cx('scroll-area min-h-0 flex-1', layout === 'bubbles' && 'pb-2')}
+      >
       <div className="mx-auto w-full md:max-w-[var(--atm-column-max)]">
         {retention ? <Horizon /> : null}
         <HistoryNote history={history} />
@@ -158,6 +176,18 @@ export function MessageStream({
 
         <div className="h-2" />
       </div>
+      </div>
+
+      {/* Scrolled well up: one tap back to the present. */}
+      {showJump ? (
+        <button
+          onClick={() => toBottom('smooth')}
+          className="absolute bottom-3 left-1/2 z-10 flex min-h-11 -translate-x-1/2 items-center gap-2 rounded-full border border-[color:var(--accent-line)] bg-ink-2 px-4 text-13 text-accent shadow-modal"
+        >
+          <ArrowDown size={15} strokeWidth={1.8} />
+          Jump to latest
+        </button>
+      ) : null}
     </div>
   )
 }

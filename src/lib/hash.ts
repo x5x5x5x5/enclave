@@ -43,3 +43,14 @@ export function fingerprint(seed: string, groups = 5, size = 4): string {
 export function seededFloat(seed: string): number {
   return (fnv1a(seed) % 100000) / 100000
 }
+
+/**
+ * Truncate in the middle, keeping both ends: `9f2c a41d` -> `9f2c…41d`.
+ * Cryptographic material is compared by its ends, so an ellipsis belongs there
+ * and never at the tail.
+ */
+export function truncateMiddle(value: string, keep = 4): string {
+  const clean = value.trim()
+  if (clean.length <= keep * 2 + 1) return clean
+  return `${clean.slice(0, keep)}…${clean.slice(-keep)}`
+}

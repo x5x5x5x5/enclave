@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { Screen } from '../../components/shell/Screen'
 import { Search } from 'lucide-react'
 import { DISCOVERY, DISCOVERY_CATEGORIES } from '../../mock/discovery'
 import type { DiscoverySpace } from '../../mock/types'
@@ -93,8 +94,8 @@ export function DiscoverScreen() {
   }, [query, category])
 
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto bg-ink-0">
-      <div className="mx-auto w-full max-w-4xl px-4 py-6 md:px-8">
+    <Screen gutter={false} contentClassName="px-[var(--gutter)]">
+      <div className="mx-auto w-full max-w-4xl py-6">
         <header>
           <h1 className="font-display text-24 text-hi">Discover</h1>
           <p className="mt-1 max-w-xl text-13 leading-relaxed text-mid">
@@ -181,6 +182,6 @@ export function DiscoverScreen() {
       </div>
 
       <PreviewSheet space={preview} onClose={() => setPreview(null)} />
-    </div>
+    </Screen>
   )
 }

@@ -47,17 +47,17 @@ export function SettingsScreen() {
   return (
     <>
       <ListColumn hideOnMobile={!!section}>
-        <header className="shrink-0 px-3 pb-2 pt-3">
+        <header className="shrink-0 px-[var(--gutter)] pb-2 pt-3">
           <h1 className="font-display text-20 text-hi">Settings</h1>
         </header>
-        <nav className="min-h-0 flex-1 overflow-y-auto px-1.5 pb-3">
+        <nav className="scroll-area min-h-0 flex-1 px-1.5 pb-3">
           {SECTIONS.map((s) => (
             <NavLink
               key={s.id}
               to={`/settings/${s.id}`}
               className={({ isActive }) =>
                 cx(
-                  'block rounded-chip px-2.5 py-2 transition-colors',
+                  'block min-h-14 rounded-chip px-2.5 py-2 transition-colors md:min-h-0',
                   isActive ? 'bg-accent-soft text-accent' : 'text-mid hover:bg-ink-2 hover:text-hi',
                 )
               }
@@ -70,7 +70,7 @@ export function SettingsScreen() {
       </ListColumn>
 
       <MainColumn hideOnMobile={!section}>
-        <header className="flex shrink-0 items-center gap-2 px-3 py-2.5 hairline-b md:px-6">
+        <header className="flex shrink-0 items-center gap-2 px-[var(--gutter)] py-2.5 hairline-b">
           <span className="inline-flex md:hidden">
             <IconButton label="Back to settings" onClick={() => navigate('/settings')}>
               <ArrowLeft size={18} strokeWidth={1.5} />
@@ -81,8 +81,8 @@ export function SettingsScreen() {
             <p className="truncate text-12 text-low">{current.note}</p>
           </div>
         </header>
-        <div className="min-h-0 flex-1 overflow-y-auto">
-          <div className="mx-auto w-full max-w-2xl px-4 py-6 md:px-6">{body[current.id]}</div>
+        <div className="scroll-area min-h-0 flex-1">
+          <div className="mx-auto w-full max-w-2xl px-[var(--gutter)] py-6">{body[current.id]}</div>
         </div>
       </MainColumn>
     </>

@@ -94,14 +94,14 @@ export function TransferCard({ media, messageId }: { media: Media; messageId: st
               {failed ? (
                 <button
                   onClick={() => setTransferState(messageId, 'sending')}
-                  className="inline-flex items-center gap-1 rounded-chip border border-[color:var(--breach-glow)] px-2 py-0.5 text-12 text-breach hover:bg-[color:var(--breach-glow)] hover:text-hi"
+                  className="inline-flex max-md:min-h-11 min-h-9 items-center gap-1 rounded-chip border border-[color:var(--breach-glow)] px-2.5 text-12 text-breach hover:bg-[color:var(--breach-glow)] hover:text-hi"
                 >
                   <RotateCw size={11} strokeWidth={1.5} /> Retry
                 </button>
               ) : done ? null : (
                 <button
                   onClick={() => setTransferState(messageId, paused ? 'sending' : 'paused')}
-                  className="inline-flex items-center gap-1 rounded-chip px-2 py-0.5 text-12 text-mid hover:bg-ink-3 hover:text-hi"
+                  className="inline-flex max-md:min-h-11 min-h-9 items-center gap-1 rounded-chip px-2.5 text-12 text-mid hover:bg-ink-3 hover:text-hi"
                 >
                   {paused ? (
                     <>

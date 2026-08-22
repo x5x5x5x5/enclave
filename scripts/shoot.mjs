@@ -65,7 +65,9 @@ async function chord(page, key) {
 async function scrollStreamTop(page) {
   await page.evaluate(() => {
     const el = [...document.querySelectorAll('div')].find(
-      (d) => d.scrollHeight > d.clientHeight + 40 && d.className.includes('overflow-y-auto'),
+      (d) =>
+        d.scrollHeight > d.clientHeight + 40 &&
+        (d.className.includes('scroll-area') || d.className.includes('overflow-y-auto')),
     )
     if (el) el.scrollTop = 0
   })
@@ -171,9 +173,70 @@ const SHOTS = [
   { name: '18-playground', path: '/playground' },
 ]
 
+/*
+ * 1440 is the desktop regression reference; 390 is the phone showcase; 360 and
+ * 430 prove the layout holds at both ends of the phone range (captured at 1x so
+ * the proof set does not dominate the repo).
+ */
 const WIDTHS = [
-  { w: 1440, h: 900 },
-  { w: 390, h: 844 },
+  { w: 1440, h: 900, scale: 2 },
+  { w: 390, h: 844, scale: 2 },
+  { w: 360, h: 800, scale: 1 },
+  { w: 430, h: 932, scale: 1 },
+]
+
+/** Mobile states the route list alone cannot reach. Captured at 390 only. */
+const MOBILE_STATES = [
+  {
+    name: '19-composer-keyboard',
+    path: '/space/c-lostera/ch-raids',
+    viewport: { w: 390, h: 460, scale: 2 },
+    async act(page) {
+      await page.evaluate(() => {
+        const el = document.querySelector('textarea')
+        el?.focus()
+      })
+      await sleep(300)
+    },
+  },
+  {
+    name: '20-members-sheet',
+    path: '/space/c-lostera/ch-raids',
+    viewport: { w: 390, h: 844, scale: 2 },
+    async act(page) {
+      await click(page, 'Room actions')
+      await click(page, 'Members and details')
+      await sleep(500)
+    },
+  },
+  {
+    name: '21-profile-edit-lens',
+    path: '/you',
+    viewport: { w: 390, h: 844, scale: 2 },
+    async act(page) {
+      await click(page, 'Edit', { exact: true })
+      await click(page, 'LostEra member', { exact: true })
+      await sleep(300)
+    },
+  },
+  {
+    name: '22-mobile-search',
+    path: '/chats',
+    viewport: { w: 390, h: 844, scale: 2 },
+    async act(page) {
+      await click(page, 'Search', { exact: true })
+      await sleep(500)
+    },
+  },
+  {
+    name: '23-composer-options-sheet',
+    path: '/chats/th-mira',
+    viewport: { w: 390, h: 844, scale: 2 },
+    async act(page) {
+      await click(page, 'Attach, expiry and scheduling')
+      await sleep(500)
+    },
+  },
 ]
 
 /*
@@ -233,10 +296,16 @@ const browser = await puppeteer.connect({
 
 mkdirSync(OUT, { recursive: true })
 
-for (const { w, h } of WIDTHS) {
+for (const { w, h, scale } of WIDTHS) {
   for (const shot of SHOTS) {
     const page = await browser.newPage()
-    await page.setViewport({ width: w, height: h, deviceScaleFactor: 2 })
+    await page.setViewport({
+      width: w,
+      height: h,
+      deviceScaleFactor: scale,
+      isMobile: w < 768,
+      hasTouch: w < 768,
+    })
     await page.goto(BASE + shot.path, { waitUntil: 'networkidle0', timeout: 30000 })
     // Fonts settle before anything is measured or captured.
     await page.evaluate(() => document.fonts.ready)
@@ -250,10 +319,32 @@ for (const { w, h } of WIDTHS) {
   }
 }
 
+let extra = 0
+for (const shot of MOBILE_STATES) {
+  const page = await browser.newPage()
+  await page.setViewport({
+    width: shot.viewport.w,
+    height: shot.viewport.h,
+    deviceScaleFactor: shot.viewport.scale,
+    isMobile: true,
+    hasTouch: true,
+  })
+  await page.goto(BASE + shot.path, { waitUntil: 'networkidle0', timeout: 30000 })
+  await page.evaluate(() => document.fonts.ready)
+  await sleep(700)
+  if (shot.act) await shot.act(page)
+  await sleep(300)
+  const file = join(OUT, `${shot.name}@${shot.viewport.w}.png`)
+  await page.screenshot({ path: file })
+  console.log(`${file}`)
+  await page.close()
+  extra += 1
+}
+
 await browser.close()
 try {
   process.kill(child.pid)
 } catch {
   /* already gone */
 }
-console.log(`\n${SHOTS.length * WIDTHS.length} screenshots in ${OUT}`)
+console.log(`\n${SHOTS.length * WIDTHS.length + extra} screenshots in ${OUT}`)

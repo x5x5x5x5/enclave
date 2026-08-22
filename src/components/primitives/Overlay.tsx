@@ -3,7 +3,11 @@ import type { ReactNode } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { X } from 'lucide-react'
 import { cx } from '../../lib/cx'
+import { useIsMobile } from '../../lib/useMediaQuery'
 import { IconButton } from './Button'
+import { Sheet } from './Sheet'
+
+export { Sheet } from './Sheet'
 
 /* -- Modal ----------------------------------------------------------------- */
 
@@ -27,10 +31,11 @@ export function Modal({
   labelledBy?: string
 }) {
   const reduce = useReducedMotion()
+  const isMobile = useIsMobile()
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (!open) return
+    if (!open || isMobile) return
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.stopPropagation()
@@ -60,7 +65,24 @@ export function Modal({
       document.removeEventListener('keydown', onKey, true)
       window.clearTimeout(t)
     }
-  }, [open, onClose])
+  }, [open, onClose, isMobile])
+
+  // Every modal is a bottom sheet on a phone. One component, two presentations.
+  if (isMobile) {
+    return (
+      <Sheet
+        open={open}
+        onClose={onClose}
+        title={title}
+        subtitle={subtitle}
+        footer={footer}
+        labelledBy={labelledBy}
+        snap={size === 'xl' || size === 'lg' ? 'full' : 'peek'}
+      >
+        <div className="px-[var(--gutter)] py-4">{children}</div>
+      </Sheet>
+    )
+  }
 
   const widths = { sm: 'max-w-sm', md: 'max-w-lg', lg: 'max-w-2xl', xl: 'max-w-4xl' }
 
@@ -112,78 +134,6 @@ export function Modal({
               </footer>
             ) : null}
           </motion.div>
-        </div>
-      ) : null}
-    </AnimatePresence>
-  )
-}
-
-/* -- Sheet (mobile right panel) -------------------------------------------- */
-
-export function Sheet({
-  open,
-  onClose,
-  title,
-  children,
-  side = 'right',
-}: {
-  open: boolean
-  onClose: () => void
-  title?: ReactNode
-  children: ReactNode
-  side?: 'right' | 'bottom' | 'left'
-}) {
-  const reduce = useReducedMotion()
-  useEffect(() => {
-    if (!open) return
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [open, onClose])
-
-  const geometry =
-    side === 'bottom'
-      ? { className: 'inset-x-0 bottom-0 max-h-[80dvh] rounded-t-modal', axis: { y: 40 } }
-      : side === 'left'
-        ? { className: 'inset-y-0 left-0 w-[86vw] max-w-sm', axis: { x: -40 } }
-        : { className: 'inset-y-0 right-0 w-[86vw] max-w-sm', axis: { x: 40 } }
-
-  return (
-    <AnimatePresence>
-      {open ? (
-        <div className="fixed inset-0 z-40">
-          <motion.button
-            aria-label="Close"
-            className="absolute inset-0 bg-[rgb(4_6_10/.6)]"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: reduce ? 0 : 0.2 }}
-            onClick={onClose}
-          />
-          <motion.aside
-            className={cx(
-              'absolute flex flex-col border-[var(--line)] bg-ink-1 shadow-modal',
-              side === 'right' && 'border-l',
-              side === 'left' && 'border-r',
-              side === 'bottom' && 'border-t',
-              geometry.className,
-            )}
-            initial={reduce ? { opacity: 0 } : { opacity: 0, ...geometry.axis }}
-            animate={reduce ? { opacity: 1 } : { opacity: 1, x: 0, y: 0 }}
-            exit={reduce ? { opacity: 0 } : { opacity: 0, ...geometry.axis }}
-            transition={{ duration: reduce ? 0 : 0.32, ease: [0.2, 0, 0, 1] }}
-          >
-            {title ? (
-              <header className="flex items-center justify-between gap-3 px-4 py-3 hairline-b">
-                <h2 className="font-display text-15 text-hi">{title}</h2>
-                <IconButton label="Close" size="sm" onClick={onClose}>
-                  <X size={16} strokeWidth={1.5} />
-                </IconButton>
-              </header>
-            ) : null}
-            <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
-          </motion.aside>
         </div>
       ) : null}
     </AnimatePresence>

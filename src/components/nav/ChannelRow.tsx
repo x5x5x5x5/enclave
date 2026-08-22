@@ -37,13 +37,15 @@ export function ChannelRow({
       <NavLink
         to={to}
         className={cx(
-          'group flex items-center gap-2 rounded-chip px-2 py-[var(--atm-row-pad)] transition-colors',
+          'group flex min-h-12 items-center gap-2 rounded-chip px-2 py-[var(--atm-row-pad)] transition-colors md:min-h-0',
           active ? 'bg-accent-soft text-accent' : 'text-mid hover:bg-ink-2 hover:text-hi',
           channel.muted && 'opacity-55',
         )}
         style={{ fontSize: 'var(--atm-list-size)', lineHeight: 'var(--atm-list-leading)' }}
       >
-        <Icon size={15} strokeWidth={1.5} className="shrink-0 opacity-70" />
+        <span className="flex w-6 shrink-0 justify-center">
+          <Icon size={15} strokeWidth={1.5} className="opacity-70" />
+        </span>
         <span className="min-w-0 flex-1 truncate">{channel.name}</span>
 
         <span className="flex shrink-0 items-center gap-1">

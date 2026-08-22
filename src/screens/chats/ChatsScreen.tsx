@@ -2,9 +2,12 @@ import { useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { MoreHorizontal, Search, Sparkles } from 'lucide-react'
 import { CHAT_ROWS } from '../../mock/threads'
+import { useIsMobile } from '../../lib/useMediaQuery'
 import { useUi } from '../../state/ui'
 import { useWorld } from '../../state/world'
+import { BellOff, Pin } from 'lucide-react'
 import { ChatRow } from '../../components/nav/ChatRow'
+import { SwipeRow } from '../../components/nav/SwipeRow'
 import { StoriesRail } from '../../components/social/StoriesRail'
 import { EmptyState } from '../../components/primitives/EmptyState'
 import { IconButton } from '../../components/primitives/Button'
@@ -88,6 +91,9 @@ export function ChatsScreen() {
   const [query, setQuery] = useState('')
   const typingIn = useWorld((s) => s.typingIn)
   const demoMode = useWorld((s) => s.demoMode)
+  const isMobile = useIsMobile()
+  const openOverlay = useUi((s) => s.openOverlay)
+  const toast = useUi((s) => s.toast)
 
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -105,24 +111,36 @@ export function ChatsScreen() {
   return (
     <>
       <ListColumn hideOnMobile={!!roomId}>
-        <header className="shrink-0 px-3 pb-2 pt-3">
-          <div className="mb-2 flex items-center justify-between gap-2">
-            <h1 className="font-display text-20 text-hi">Chats</h1>
-            <UserMenu />
+        <header
+          className="shrink-0 px-[var(--gutter)] pb-2 pt-3"
+          style={{ paddingTop: 'calc(12px + var(--safe-top))' }}
+        >
+          <div className="flex items-center justify-between gap-2">
+            <h1 className="font-display text-24 text-hi md:text-20">Chats</h1>
+            <div className="flex items-center gap-1">
+              {isMobile ? (
+                <IconButton label="Search" onClick={() => openOverlay('command-palette')}>
+                  <Search size={18} strokeWidth={1.5} />
+                </IconButton>
+              ) : null}
+              <UserMenu />
+            </div>
           </div>
-          <Input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search"
-            leading={<Search size={15} strokeWidth={1.5} />}
-            className="h-9"
-          />
+          {isMobile ? null : (
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search"
+              leading={<Search size={15} strokeWidth={1.5} />}
+              className="mt-2 h-9"
+            />
+          )}
         </header>
 
         <StoriesRail />
 
         <Tabs
-          className="shrink-0 px-2"
+          className="shrink-0 px-[var(--gutter)]"
           ariaLabel="Folders"
           items={[
             { id: 'all', label: 'All' },
@@ -134,7 +152,7 @@ export function ChatsScreen() {
           onChange={(f) => setFolder(f as Folder)}
         />
 
-        <div className="min-h-0 flex-1 overflow-y-auto px-1.5 py-2">
+        <div className="scroll-area min-h-0 flex-1 px-1.5 py-2">
           {folder === 'requests' ? (
             <div className="px-1.5 py-1">
               {CHAT_ROWS.filter((r) => r.folder === 'requests').map((r) => (
@@ -150,12 +168,37 @@ export function ChatsScreen() {
             />
           ) : (
             rows.map((row) => (
-              <ChatRow
+              <SwipeRow
                 key={row.id}
-                row={row}
-                to={`/chats/${row.threadId}`}
-                active={roomId === row.threadId}
-              />
+                className="rounded-card"
+                actions={[
+                  {
+                    label: row.muted ? 'Unmute' : 'Mute',
+                    icon: <BellOff size={16} strokeWidth={1.5} />,
+                    onAction: () =>
+                      toast({
+                        kind: 'neutral',
+                        title: row.muted ? `${row.title} unmuted` : `${row.title} muted`,
+                      }),
+                  },
+                  {
+                    label: row.pinned ? 'Unpin' : 'Pin',
+                    icon: <Pin size={16} strokeWidth={1.5} />,
+                    tone: 'accent',
+                    onAction: () =>
+                      toast({
+                        kind: 'accent',
+                        title: row.pinned ? `${row.title} unpinned` : `${row.title} pinned`,
+                      }),
+                  },
+                ]}
+              >
+                <ChatRow
+                  row={row}
+                  to={`/chats/${row.threadId}`}
+                  active={roomId === row.threadId}
+                />
+              </SwipeRow>
             ))
           )}
         </div>

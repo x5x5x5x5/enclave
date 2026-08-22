@@ -79,9 +79,14 @@ export function SocialCard() {
       }
     >
       <div className="flex flex-col gap-4">
-        <div className="flex flex-wrap gap-2">
+        <div className="-mx-1 flex snap-x snap-mandatory gap-2 overflow-x-auto px-1 no-scrollbar md:flex-wrap md:overflow-visible">
           {SOCIAL_CARD_TEMPLATES.map((t) => (
-            <ChipButton key={t.id} selected={t.id === template} onClick={() => setTemplate(t.id)}>
+            <ChipButton
+              key={t.id}
+              className="snap-center"
+              selected={t.id === template}
+              onClick={() => setTemplate(t.id)}
+            >
               {t.name}
             </ChipButton>
           ))}

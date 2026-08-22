@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { Screen } from '../../components/shell/Screen'
 import { Compass } from 'lucide-react'
 import { COMMUNITIES } from '../../mock/communities'
 import { useWorld } from '../../state/world'
@@ -16,8 +17,8 @@ export function SpacesScreen() {
   const demoMode = useWorld((s) => s.demoMode)
 
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto bg-ink-0">
-      <div className="mx-auto w-full max-w-3xl px-4 py-6 md:px-8">
+    <Screen gutter={false} contentClassName="px-[var(--gutter)]">
+      <div className="mx-auto w-full max-w-3xl py-6">
         <header className="mb-5 flex items-center justify-between gap-3">
           <h1 className="font-display text-24 text-hi">Spaces</h1>
           <Button
@@ -73,6 +74,6 @@ export function SpacesScreen() {
           ))}
         </div>
       </div>
-    </div>
+    </Screen>
   )
 }

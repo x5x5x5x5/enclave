@@ -29,25 +29,32 @@ export function Toggle({
       disabled={disabled}
       onClick={() => onChange(!checked)}
       className={cx(
-        'relative h-6 w-10 shrink-0 rounded-full border transition-colors duration-[var(--dur-std)] ease-enclave',
-        checked
-          ? tone === 'breach'
-            ? 'border-[color:var(--breach-glow)] bg-breach-soft'
-            : 'border-[color:var(--accent-line)] bg-accent-soft'
-          : 'border-[var(--line)] bg-ink-2',
+        'flex shrink-0 items-center justify-center max-md:h-11 max-md:w-11',
         disabled && 'cursor-not-allowed opacity-40',
       )}
     >
       <span
+        aria-hidden="true"
         className={cx(
-          'absolute top-1/2 block h-4 w-4 -translate-y-1/2 rounded-full transition-[left,background-color] duration-[var(--dur-std)] ease-enclave',
+          'relative block h-6 w-10 rounded-full border transition-colors duration-[var(--dur-std)] ease-enclave',
           checked
             ? tone === 'breach'
-              ? 'left-[calc(100%-1.125rem)] bg-breach'
-              : 'left-[calc(100%-1.125rem)] bg-accent'
-            : 'left-0.5 bg-[var(--text-low)]',
+              ? 'border-[color:var(--breach-glow)] bg-breach-soft'
+              : 'border-[color:var(--accent-line)] bg-accent-soft'
+            : 'border-[var(--line)] bg-ink-2',
         )}
-      />
+      >
+        <span
+          className={cx(
+            'absolute top-1/2 block h-4 w-4 -translate-y-1/2 rounded-full transition-[left,background-color] duration-[var(--dur-std)] ease-enclave',
+            checked
+              ? tone === 'breach'
+                ? 'left-[calc(100%-1.125rem)] bg-breach'
+                : 'left-[calc(100%-1.125rem)] bg-accent'
+              : 'left-0.5 bg-[var(--text-low)]',
+          )}
+        />
+      </span>
     </button>
   )
 
@@ -94,6 +101,7 @@ export function Segmented<T extends string>({
       aria-label={ariaLabel}
       className={cx(
         'inline-flex rounded-chip border border-[var(--line)] bg-ink-1 p-0.5',
+        className?.includes('w-full') && 'flex',
         className,
       )}
     >
@@ -106,7 +114,7 @@ export function Segmented<T extends string>({
             aria-checked={active}
             onClick={() => onChange(o.id)}
             className={cx(
-              'rounded-[4px] transition-colors duration-[var(--dur-micro)] max-md:min-h-9',
+              'flex-1 rounded-[4px] transition-colors duration-[var(--dur-micro)] max-md:min-h-11 max-md:min-w-11',
               size === 'sm' ? 'px-2 py-1 text-12' : 'px-3 py-1.5 text-13',
               active
                 ? 'bg-accent-soft text-accent'
@@ -159,7 +167,7 @@ export function Slider({
         value={value}
         aria-label={label}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="enclave-slider h-6 w-full cursor-pointer appearance-none bg-transparent"
+        className="enclave-slider h-11 w-full cursor-pointer appearance-none bg-transparent"
         style={
           {
             '--pct': `${pct}%`,

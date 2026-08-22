@@ -1,16 +1,18 @@
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, Phone, PanelRight, Users } from 'lucide-react'
+import { ArrowLeft, MoreVertical, Phone, PanelRight, Users } from 'lucide-react'
 import { cx } from '../../lib/cx'
 import { maskById } from '../../mock/masks'
 import { communityById } from '../../mock/communities'
 import { resolveRoom } from '../../mock/world'
+import { useIsMobile } from '../../lib/useMediaQuery'
 import { useApp } from '../../state/app'
 import { useUi } from '../../state/ui'
 import { useWorld } from '../../state/world'
 import { Button, IconButton } from '../../components/primitives/Button'
 import { Chip } from '../../components/primitives/Chip'
 import { EmptyState } from '../../components/primitives/EmptyState'
-import { Sheet } from '../../components/primitives/Overlay'
+import { Popover } from '../../components/primitives/Overlay'
+import { Sheet } from '../../components/primitives/Sheet'
 import { PresenceThread } from '../../components/shell/Columns'
 import { Composer } from '../../components/messaging/Composer'
 import { MessageStream } from '../../components/messaging/MessageStream'
@@ -39,6 +41,7 @@ export function Conversation({ roomId, backTo }: { roomId: string; backTo: strin
   const overlay = useUi((s) => s.overlay)
   const closeOverlay = useUi((s) => s.closeOverlay)
   const panelOpen = rightPanel !== null
+  const isMobile = useIsMobile()
 
   if (!room) {
     return (
@@ -62,7 +65,7 @@ export function Conversation({ roomId, backTo }: { roomId: string; backTo: strin
   return (
     <div className="flex min-h-0 min-w-0 flex-1">
       <div className="flex min-h-0 min-w-0 flex-1 flex-col bg-ink-0">
-        <header className="atm-chrome flex shrink-0 items-center gap-3 px-3 py-2.5 md:px-4">
+        <header className="atm-chrome flex shrink-0 items-center gap-2 px-[var(--gutter)] py-2.5">
           <span className="inline-flex md:hidden">
             <IconButton label="Back" onClick={() => navigate(backTo)}>
               <ArrowLeft size={18} strokeWidth={1.5} />
@@ -71,19 +74,23 @@ export function Conversation({ roomId, backTo }: { roomId: string; backTo: strin
 
           <div className="flex min-w-0 flex-1 items-center gap-2">
             {isDm ? <MaskAvatar maskId={room.memberMaskIds?.[0] ?? ''} size={28} /> : null}
-            <h1 className="truncate font-display text-15 text-hi">{room.title}</h1>
+            <h1 className="min-w-0 truncate font-display text-17 text-hi md:text-15">
+              {room.title}
+            </h1>
             {room.subtitle ? (
-              <span className="hidden shrink-0 text-13 text-low sm:inline">· {room.subtitle}</span>
+              <span className="hidden shrink-0 text-13 text-low md:inline">· {room.subtitle}</span>
             ) : null}
             <SealBadge state={room.sealed ? 'sealed' : 'unsealed'} />
             {isStaffChannel ? (
-              <span className="text-low" title="You only see messages from when you joined">
+              <span className="shrink-0 text-low" title="You only see messages from when you joined">
                 <GhostGlyph size={14} />
               </span>
             ) : null}
             {room.retention ? <RetentionChip retention={room.retention} /> : null}
             {room.temporaryUntil ? (
-              <Countdown until={room.temporaryUntil} prefix="closes in" />
+              <span className="hidden sm:inline-flex">
+                <Countdown until={room.temporaryUntil} prefix="closes in" />
+              </span>
             ) : null}
             {room.headerNote ? (
               <span className="hidden lg:inline-flex">
@@ -98,23 +105,62 @@ export function Conversation({ roomId, backTo }: { roomId: string; backTo: strin
                 <FuzzedCount value={room.memberEstimate} />
               </span>
             ) : null}
-            <IconButton label="Call" onClick={() => later('Calling from a text room')}>
-              <Phone size={17} strokeWidth={1.5} />
-            </IconButton>
-            <span className="inline-flex lg:hidden">
-              <IconButton label="Members" onClick={() => openOverlay('room-details', roomId)}>
-                <Users size={17} strokeWidth={1.5} />
-              </IconButton>
-            </span>
-            <span className="hidden lg:inline-flex">
-              <IconButton
-                label="Right panel"
-                active={panelOpen}
-                onClick={() => setRightPanel(panelOpen ? null : 'members')}
+
+            {/* One overflow control on a phone; the real controls on a pointer. */}
+            {isMobile ? (
+              <Popover
+                side="bottom"
+                align="end"
+                trigger={({ toggle }) => (
+                  <IconButton label="Room actions" onClick={toggle}>
+                    <MoreVertical size={18} strokeWidth={1.5} />
+                  </IconButton>
+                )}
               >
-                <PanelRight size={17} strokeWidth={1.5} />
-              </IconButton>
-            </span>
+                {(close) => (
+                  <div className="w-52 p-1">
+                    <button
+                      className="flex min-h-11 w-full items-center gap-2.5 rounded-chip px-2 text-14 text-mid"
+                      onClick={() => {
+                        close()
+                        later('Calling from a text room')
+                      }}
+                    >
+                      <Phone size={16} strokeWidth={1.5} /> Call
+                    </button>
+                    <button
+                      className="flex min-h-11 w-full items-center gap-2.5 rounded-chip px-2 text-14 text-mid"
+                      onClick={() => {
+                        close()
+                        openOverlay('room-details', roomId)
+                      }}
+                    >
+                      <Users size={16} strokeWidth={1.5} /> Members and details
+                    </button>
+                  </div>
+                )}
+              </Popover>
+            ) : (
+              <>
+                <IconButton label="Call" onClick={() => later('Calling from a text room')}>
+                  <Phone size={17} strokeWidth={1.5} />
+                </IconButton>
+                <span className="inline-flex lg:hidden">
+                  <IconButton label="Members" onClick={() => openOverlay('room-details', roomId)}>
+                    <Users size={17} strokeWidth={1.5} />
+                  </IconButton>
+                </span>
+                <span className="hidden lg:inline-flex">
+                  <IconButton
+                    label="Right panel"
+                    active={panelOpen}
+                    onClick={() => setRightPanel(panelOpen ? null : 'members')}
+                  >
+                    <PanelRight size={17} strokeWidth={1.5} />
+                  </IconButton>
+                </span>
+              </>
+            )}
           </div>
         </header>
 
@@ -146,7 +192,9 @@ export function Conversation({ roomId, backTo }: { roomId: string; backTo: strin
         ) : null}
 
         {room.topic ? (
-          <p className="atm-chrome shrink-0 px-4 py-1.5 text-12 text-low hairline-b">{room.topic}</p>
+          <p className="atm-chrome hidden shrink-0 truncate px-[var(--gutter)] py-1.5 text-12 text-low hairline-b sm:block">
+            {room.topic}
+          </p>
         ) : null}
 
         <MessageStream
@@ -165,7 +213,10 @@ export function Conversation({ roomId, backTo }: { roomId: string; backTo: strin
         <ReportSelectionBar />
 
         {reporting ? null : isRequest ? (
-          <div className="shrink-0 px-4 py-3 hairline-t">
+          <div
+            className="shrink-0 px-[var(--gutter)] py-3 hairline-t"
+            style={{ paddingBottom: 'calc(12px + var(--safe-bottom) + var(--keyboard-inset))' }}
+          >
             <div className="rounded-card border border-[var(--line)] bg-ink-1 p-3">
               <p className="text-13 text-hi">
                 Accept this request to allow messages from{' '}
@@ -174,10 +225,10 @@ export function Conversation({ roomId, backTo }: { roomId: string; backTo: strin
               <p className="mt-1 text-12 leading-relaxed text-mid">
                 They see nothing about you until you do. Declining tells them nothing either.
               </p>
-              <div className="mt-3 flex gap-2">
+              <div className="mt-3 flex flex-wrap gap-2">
                 <Button
                   variant="solid"
-                  size="sm"
+                  size="md"
                   onClick={() =>
                     toast({
                       kind: 'accent',
@@ -190,14 +241,14 @@ export function Conversation({ roomId, backTo }: { roomId: string; backTo: strin
                 </Button>
                 <Button
                   variant="ghost"
-                  size="sm"
+                  size="md"
                   onClick={() =>
                     toast({ kind: 'neutral', title: 'Request declined', body: 'They are not told.' })
                   }
                 >
                   Decline
                 </Button>
-                <Button variant="ghost" size="sm" onClick={() => later('Blocking')}>
+                <Button variant="ghost" size="md" onClick={() => later('Blocking')}>
                   Block
                 </Button>
               </div>
@@ -230,6 +281,7 @@ export function Conversation({ roomId, backTo }: { roomId: string; backTo: strin
         open={overlay === 'room-details'}
         onClose={closeOverlay}
         title="Members"
+        snap="full"
       >
         <MemberPanel roomId={roomId} />
       </Sheet>

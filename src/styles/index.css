@@ -44,6 +44,7 @@
   --text-13: var(--fs-13);
   --text-14: var(--fs-14);
   --text-15: var(--fs-15);
+  --text-16: var(--fs-16);
   --text-17: var(--fs-17);
   --text-20: var(--fs-20);
   --text-24: var(--fs-24);
@@ -68,7 +69,10 @@
   html {
     background: var(--ink-0);
     color-scheme: dark;
+    /* Paired with real :active states below — never remove one without the other. */
     -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   body {
@@ -94,6 +98,26 @@
   button, input, textarea, select {
     font: inherit;
     color: inherit;
+  }
+
+  /* Touch defaults: no 300ms delay, no double-tap zoom on controls, and a
+     visible press state to replace the tap highlight we just removed. */
+  button,
+  a,
+  [role='tab'],
+  [role='radio'],
+  [role='switch'],
+  label {
+    touch-action: manipulation;
+  }
+
+  @media (hover: none) {
+    button:active,
+    a:active,
+    [role='tab']:active,
+    [role='radio']:active {
+      transform: scale(0.97);
+    }
   }
 
   :focus-visible {
@@ -288,4 +312,52 @@
 [data-atmosphere='salon'] .atm-chrome:hover,
 [data-atmosphere='salon'] .atm-chrome:focus-within {
   opacity: 1;
+}
+
+/* ---------------------------------------------------------------------------
+   Mobile foundation. Everything here is systemic on purpose: a screen should
+   not be able to opt out of the gutter, the safe area, or scroll containment.
+   ------------------------------------------------------------------------- */
+
+/* Long words, URLs and handles break rather than widening a bubble. */
+@utility prose-break {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Scroll containers never chain their overscroll to the page. */
+@utility scroll-area {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Long-press must not raise the iOS callout on hold-to-view media. */
+@utility no-callout {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Inputs are 16px on phones so focus never zooms the viewport, and drop back to
+   the design system's own sizes once there is no soft keyboard to worry about. */
+@media (max-width: 767px) {
+  input,
+  textarea,
+  select {
+    font-size: var(--fs-16);
+  }
+}
+
+/* Slider thumb: 14px of ink on a 44px grab area, so touch has something to hold. */
+@media (hover: none) {
+  .enclave-slider::-webkit-slider-thumb {
+    height: 22px;
+    width: 22px;
+    margin-top: -9px;
+  }
+  .enclave-slider::-moz-range-thumb {
+    height: 22px;
+    width: 22px;
+  }
 }

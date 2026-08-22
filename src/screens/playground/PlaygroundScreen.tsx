@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Screen } from '../../components/shell/Screen'
 import { Bell, Mic, Paperclip, Search, Send } from 'lucide-react'
 import { ahead } from '../../lib/time'
 import { AVATAR_PRESETS, OWN_MASKS, PEOPLE } from '../../mock/masks'
@@ -74,8 +75,8 @@ export function PlaygroundScreen() {
   const activeMaskId = useApp((s) => s.activeMaskId)
 
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto bg-ink-0">
-      <div className="mx-auto w-full max-w-5xl px-5 py-8 md:px-8">
+    <Screen gutter={false} contentClassName="px-[var(--gutter)]">
+      <div className="mx-auto w-full max-w-5xl py-8">
         <header className="pb-6 hairline-b">
           <p className="text-12 uppercase tracking-[0.08em] text-low">Visual regression</p>
           <h1 className="mt-1 font-display text-30 text-hi">Playground</h1>
@@ -530,6 +531,6 @@ export function PlaygroundScreen() {
           appear.
         </p>
       </Modal>
-    </div>
+    </Screen>
   )
 }

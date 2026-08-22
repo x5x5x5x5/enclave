@@ -1,6 +1,7 @@
 import { Check, Copy, Info } from 'lucide-react'
 import { useState } from 'react'
 import { cx } from '../../lib/cx'
+import { truncateMiddle } from '../../lib/hash'
 import { Chip } from '../primitives/Chip'
 import { Popover, Tooltip } from '../primitives/Overlay'
 import { GhostGlyph, HourglassGlyph, RelayGlyph, SealGlyph, ZkGlyph } from './Glyphs'
@@ -90,7 +91,7 @@ export function ZkBadge({
       trigger={({ toggle }) => (
         <button
           onClick={toggle}
-          className="inline-flex items-center gap-1.5 rounded-chip border border-[var(--line)] bg-ink-2 px-2 py-1 text-12 text-mid transition-colors hover:border-[color:var(--accent-line)] hover:text-hi"
+          className="inline-flex items-center gap-1.5 rounded-chip border border-[var(--line)] bg-ink-2 px-2.5 py-1 text-12 text-mid transition-colors hover:border-[color:var(--accent-line)] hover:text-hi max-md:min-h-11"
         >
           <ZkGlyph size={13} />
           <span>{label}</span>
@@ -123,7 +124,8 @@ export function FrankingHash({
   label?: string
 }) {
   const [copied, setCopied] = useState(false)
-  const shown = full ? tag : tag.split(' ')[0]
+  // Middle truncation keeps both ends, which is how a hash is checked.
+  const shown = full ? tag : truncateMiddle(tag.replace(/\s+/g, ''))
 
   return (
     <button
@@ -134,12 +136,12 @@ export function FrankingHash({
       }}
       title="Copy proof"
       className={cx(
-        'group inline-flex items-center gap-1 rounded-[4px] px-1 font-mono text-12 tracking-tight text-low transition-colors hover:bg-ink-2 hover:text-mid',
+        'group inline-flex items-center gap-1 rounded-[4px] px-1.5 font-mono text-12 tracking-tight text-low transition-colors hover:bg-ink-2 hover:text-mid max-md:min-h-11',
         className,
       )}
     >
       {label ? <span className="font-ui">{label}</span> : null}
-      <span>{shown}</span>
+      <span className="whitespace-nowrap">{shown}</span>
       {copied ? (
         <Check size={11} strokeWidth={2} className="text-accent" />
       ) : (

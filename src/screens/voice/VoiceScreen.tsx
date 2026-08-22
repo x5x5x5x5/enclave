@@ -74,7 +74,7 @@ export function VoiceScreen() {
       <PresenceThread />
 
       {/* A room with four people in it should not read as an empty page. */}
-      <div className="flex min-h-0 flex-1 items-center overflow-y-auto px-4 py-6 md:px-8">
+      <div className="scroll-area flex min-h-0 flex-1 items-center px-[var(--gutter)] py-6">
         <div className="mx-auto w-full max-w-4xl">
           {channel.temporary ? (
             <p className="mb-5 rounded-card border border-[color:var(--ember-glow)] bg-ember-soft px-3 py-2 text-13 text-ember">
@@ -90,7 +90,7 @@ export function VoiceScreen() {
               onAction={() => useUi.getState().openOverlay('command-palette')}
             />
           ) : (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-3 gap-2.5 sm:gap-3 lg:grid-cols-4">
               {occupants.map((o) => (
                 <OccupantPill
                   key={o.maskId}
@@ -105,8 +105,11 @@ export function VoiceScreen() {
         </div>
       </div>
 
-      <footer className="shrink-0 px-4 py-3 hairline-t">
-        <div className="mx-auto flex w-full max-w-4xl flex-wrap items-center justify-center gap-2">
+      <footer
+        className="shrink-0 px-[var(--gutter)] pt-3 hairline-t"
+        style={{ paddingBottom: 'calc(12px + var(--safe-bottom))' }}
+      >
+        <div className="mx-auto flex w-full max-w-4xl flex-wrap items-center justify-center gap-2 [&>button]:min-h-14 md:[&>button]:min-h-11">
           <Button
             variant={you?.muted ? 'danger' : 'quiet'}
             size="md"

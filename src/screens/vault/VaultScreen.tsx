@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CornerUpRight, ExternalLink, FileText, Plus, Search } from 'lucide-react'
 import { cx } from '../../lib/cx'
+import { Screen } from '../../components/shell/Screen'
 import { shortStamp } from '../../lib/time'
 import { BRAND } from '../../config/brand'
 import { VAULT, VAULT_TABS } from '../../mock/vault'
@@ -53,8 +54,8 @@ export function VaultScreen() {
   }, [tab, query, savedFromChats])
 
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto bg-ink-0">
-      <div className="mx-auto w-full max-w-4xl px-4 py-6 md:px-8">
+    <Screen gutter={false} contentClassName="px-[var(--gutter)]">
+      <div className="mx-auto w-full max-w-4xl py-6">
         <header>
           <h1 className="font-display text-24 text-hi">Vault</h1>
           <p className="mt-1 flex items-center gap-1.5 text-13 text-mid">
@@ -86,6 +87,7 @@ export function VaultScreen() {
         </header>
 
         <Tabs
+          variant="pill"
           className="mt-4"
           ariaLabel="Vault sections"
           items={VAULT_TABS.map((t) => ({ id: t.id, label: t.label }))}
@@ -221,11 +223,11 @@ export function VaultScreen() {
           ) : (
             <div className="flex flex-col gap-2">
               {items.slice(0, 5).map((i) => (
-                <Card key={i.id} className="flex items-center gap-3 p-3">
+                <Card key={i.id} className="flex items-center gap-2 p-3">
                   <p className="mono-num min-w-0 flex-1 truncate text-13 text-hi">{i.preview}</p>
-                  <Chip tone="mono">{i.device}</Chip>
-                  <span className="mono-num shrink-0 text-12 text-low">
-                    synced {shortStamp(i.ts)}
+                  <span className="flex shrink-0 items-center gap-2">
+                    <Chip tone="mono">{i.device}</Chip>
+                    <span className="mono-num text-12 text-low">{shortStamp(i.ts)}</span>
                   </span>
                 </Card>
               ))}
@@ -237,6 +239,6 @@ export function VaultScreen() {
           )}
         </div>
       </div>
-    </div>
+    </Screen>
   )
 }

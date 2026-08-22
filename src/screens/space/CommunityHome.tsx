@@ -38,8 +38,8 @@ export function CommunityHome({ community }: { community: Community }) {
 
   return (
     <MainColumn centered>
-      <div className="min-h-0 flex-1 overflow-y-auto">
-        <div className="mx-auto w-full max-w-3xl px-5 py-8 md:px-8">
+      <div className="scroll-area min-h-0 flex-1">
+        <div className="mx-auto w-full max-w-3xl px-[var(--gutter)] py-8">
           <header>
             <div
               className="mb-4 flex h-14 w-14 items-center justify-center rounded-modal border font-display text-17"

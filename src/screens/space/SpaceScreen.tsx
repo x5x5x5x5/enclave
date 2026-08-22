@@ -40,7 +40,7 @@ export function SpaceScreen() {
 
   const channelList = (
     <>
-      <header className="atm-chrome shrink-0 px-3 pb-2 pt-3">
+      <header className="atm-chrome shrink-0 px-[var(--gutter)] pb-2 pt-3">
         <h1 className="truncate font-display text-17 text-hi">{community.name}</h1>
         <div className="mt-1 flex flex-wrap items-center gap-1.5">
           <FuzzedCount value={`${community.memberEstimate} members`} />
@@ -60,7 +60,7 @@ export function SpaceScreen() {
         </div>
       </header>
 
-      <div className="min-h-0 flex-1 overflow-y-auto pb-3">
+      <div className="scroll-area min-h-0 flex-1 pb-3">
         <SectionLabel className="px-4 pb-1 pt-3">Rooms</SectionLabel>
         {grouped.text.map((c) => (
           <ChannelRow
@@ -88,7 +88,9 @@ export function SpaceScreen() {
     >
       {/* Salon collapses the sidebar into a header dropdown — the layout is the
           privacy signal, so a quiet room does not get a loud channel column. */}
-      {salon ? null : <ListColumn hideOnMobile={!!channelId}>{channelList}</ListColumn>}
+      {/* The channel column is a desktop affordance. On a phone the community
+          home *is* the channel list, so rendering both pushed one off-screen. */}
+      {salon ? null : <ListColumn hideOnMobile>{channelList}</ListColumn>}
 
       {salon ? (
         <div className="flex min-h-0 min-w-0 flex-1 flex-col">
@@ -99,7 +101,7 @@ export function SpaceScreen() {
               trigger={({ toggle }) => (
                 <button
                   onClick={toggle}
-                  className="flex items-center gap-1.5 rounded-chip px-2 py-1 text-13 text-mid transition-colors hover:bg-ink-2 hover:text-hi"
+                  className="flex items-center gap-1.5 rounded-chip px-2 py-1 text-13 text-mid transition-colors hover:bg-ink-2 hover:text-hi max-md:min-h-11"
                 >
                   <span className="font-display text-hi">{community.name}</span>
                   <ChevronDown size={14} strokeWidth={1.5} />

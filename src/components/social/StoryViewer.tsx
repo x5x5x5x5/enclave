@@ -86,7 +86,7 @@ export function StoryViewer() {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[rgb(4_6_10/.92)] p-0 sm:p-6">
+      <div className="fixed inset-0 z-[70] flex h-[100dvh] items-center justify-center bg-[rgb(4_6_10/.92)] p-0 sm:p-6">
         <motion.div
           initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -95,7 +95,8 @@ export function StoryViewer() {
           className="relative flex h-full w-full max-w-md flex-col overflow-hidden border-[var(--line)] bg-ink-1 sm:h-[min(760px,92dvh)] sm:rounded-modal sm:border"
         >
           {/* progress segments */}
-          <div className="absolute inset-x-3 top-3 z-20 flex gap-1">
+          <div className="absolute inset-x-3 z-20 flex gap-1"
+            style={{ top: 'calc(12px + var(--safe-top))' }}>
             {items.map((s, i) => (
               <span key={s.id} className="h-0.5 flex-1 overflow-hidden rounded-full bg-[rgb(255_255_255/.22)]">
                 <span
@@ -109,7 +110,10 @@ export function StoryViewer() {
             ))}
           </div>
 
-          <div className="absolute inset-x-0 top-6 z-20 flex items-center gap-2.5 px-3 pt-2">
+          <div
+            className="absolute inset-x-0 z-20 flex items-center gap-2.5 px-3 pt-2"
+            style={{ top: 'calc(24px + var(--safe-top))' }}
+          >
             <MaskAvatar maskId={author.id} size={30} presence={false} />
             <div className="min-w-0 flex-1">
               <p className="truncate text-13 text-hi">{author.displayName}</p>
@@ -187,7 +191,10 @@ export function StoryViewer() {
           </div>
 
           {/* reply */}
-          <div className="flex shrink-0 items-center gap-2 border-t border-[var(--line)] bg-ink-1 px-3 py-2.5">
+          <div
+            className="flex shrink-0 items-center gap-2 border-t border-[var(--line)] bg-ink-1 px-3 pt-2.5"
+            style={{ paddingBottom: 'calc(10px + var(--safe-bottom) + var(--keyboard-inset))' }}
+          >
             <input
               value={reply}
               onChange={(e) => setReply(e.target.value)}
@@ -195,7 +202,7 @@ export function StoryViewer() {
               onBlur={() => setPaused(false)}
               placeholder={`Reply to ${author.displayName}`}
               aria-label="Reply"
-              className="h-9 min-w-0 flex-1 rounded-chip border border-[var(--line)] bg-ink-2 px-3 text-13 text-hi outline-none placeholder:text-low focus:border-[color:var(--accent-line)]"
+              className="min-h-11 min-w-0 flex-1 rounded-full border border-[var(--line)] bg-ink-2 px-4 text-16 text-hi outline-none placeholder:text-low focus:border-[color:var(--accent-line)]"
             />
             <IconButton
               label="Send reply"

@@ -26,6 +26,7 @@ export function IdentityChip({
       className={cx(
         'inline-flex items-center gap-2 rounded-full border border-[var(--line)] bg-ink-1 transition-colors',
         size === 'sm' ? 'py-0.5 pl-0.5 pr-2' : 'py-1 pl-1 pr-2.5',
+        onClick && 'max-md:min-h-11',
         onClick && 'hover:border-[color:var(--accent-line)] hover:bg-ink-2',
         className,
       )}

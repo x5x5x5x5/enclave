@@ -7,16 +7,22 @@ import { Rail } from '../nav/Rail'
 import { ToastHost } from '../primitives/Toast'
 import { StoryViewer } from '../social/StoryViewer'
 import { StoryComposer } from '../social/StoryComposer'
+import { useKeyboardInset } from '../../lib/useKeyboardInset'
 import { useUi } from '../../state/ui'
 import { useWorld } from '../../state/world'
 import { useChrome } from './useChrome'
 
+/** Routes that put you inside a room; the tab bar never shows there. */
+const IN_ROOM = [/^\/chats\/[^/]+/, /^\/space\/[^/]+\/[^/]+/, /^\/voice\//]
+
 export function AppShell() {
   useChrome()
+  useKeyboardInset()
   const toggleOverlay = useUi((s) => s.toggleOverlay)
   const closeOverlay = useUi((s) => s.closeOverlay)
   const advanceTransfers = useWorld((s) => s.advanceTransfers)
   const location = useLocation()
+  const inRoom = IN_ROOM.some((re) => re.test(location.pathname))
 
   /* Global keyboard path: palette and mask switcher are always one chord away. */
   useEffect(() => {
@@ -56,7 +62,7 @@ export function AppShell() {
           <Outlet />
         </div>
       </div>
-      <MobileTabs />
+      {inRoom ? null : <MobileTabs />}
       <MaskSwitcher />
       <CommandPalette />
       <StoryViewer />

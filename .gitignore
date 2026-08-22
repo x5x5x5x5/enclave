@@ -5,3 +5,6 @@ dist-ssr
 .DS_Store
 .vite
 node_modules/.tmp
+
+# handoff pack archive, kept out of the repo
+files.zip

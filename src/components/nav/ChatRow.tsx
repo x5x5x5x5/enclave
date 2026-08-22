@@ -15,7 +15,7 @@ export function ChatRow({ row, to, active }: { row: ChatRowData; to: string; act
     <NavLink
       to={to}
       className={cx(
-        'group flex items-center gap-2.5 rounded-card px-2 py-2 transition-colors',
+        'group flex min-h-[72px] items-center gap-2.5 rounded-card px-2 py-2 transition-colors md:min-h-0',
         active ? 'bg-accent-soft' : 'hover:bg-ink-2',
         dimmed && 'opacity-55',
       )}

@@ -39,7 +39,13 @@ interface WorldState {
   setEmber: (e: EmberChoice) => void
   toggleBlurAttachments: () => void
 
-  send: (channelId: string, authorMaskId: string, body: string, scheduledFor?: string) => string
+  send: (
+    channelId: string,
+    authorMaskId: string,
+    body: string,
+    scheduledFor?: string,
+    replyToId?: string,
+  ) => string
   undoSend: (id: string) => void
   finishUndo: (id: string) => void
   dissolve: (id: string) => void
@@ -111,7 +117,7 @@ export const useWorld = create<WorldState>((set, get) => ({
   setEmber: (ember) => set({ ember }),
   toggleBlurAttachments: () => set((s) => ({ blurAttachments: !s.blurAttachments })),
 
-  send: (channelId, authorMaskId, body, scheduledFor) => {
+  send: (channelId, authorMaskId, body, scheduledFor, replyToId) => {
     const id = `sent-${++sendSeq}`
     const now = Date.now()
     const ember = get().ember
@@ -123,6 +129,7 @@ export const useWorld = create<WorldState>((set, get) => ({
       body,
       state: scheduledFor ? 'scheduled' : 'sent',
       frankingTag: frank(id + body),
+      replyToId,
       undoUntil: scheduledFor ? undefined : new Date(now + 5 * SECOND).toISOString(),
       scheduledFor,
       ephemeral:

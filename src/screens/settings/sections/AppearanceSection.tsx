@@ -64,8 +64,8 @@ export function AppearanceSection() {
                 onClick={() => setActiveMask(m.id)}
                 className={
                   m.id === activeMaskId
-                    ? 'flex items-center gap-2 rounded-chip border border-[color:var(--accent-line)] bg-accent-soft px-2.5 py-1.5 text-13 text-accent'
-                    : 'flex items-center gap-2 rounded-chip border border-[var(--line)] px-2.5 py-1.5 text-13 text-mid hover:bg-ink-2 hover:text-hi'
+                    ? 'flex items-center gap-2 rounded-chip border border-[color:var(--accent-line)] bg-accent-soft px-2.5 py-1.5 text-13 text-accent max-md:min-h-11'
+                    : 'flex items-center gap-2 rounded-chip border border-[var(--line)] px-2.5 py-1.5 text-13 text-mid hover:bg-ink-2 hover:text-hi max-md:min-h-11'
                 }
               >
                 <MaskAvatar maskId={m.id} size={20} presence={false} />
