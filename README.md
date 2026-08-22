@@ -1,5 +1,7 @@
 # Enclave
 
+**Live: https://x5x5x5x5.github.io/enclave/**
+
 A front-end-only, clickable prototype of a community platform built on four ideas:
 
 1. **Contextual identity** — one account, many masks. You are a different person in each community,
@@ -14,7 +16,7 @@ A front-end-only, clickable prototype of a community platform built on four idea
 There is no backend, no network, no real crypto. Everything renders from fixtures in `src/mock`,
 driven by timers and local state.
 
-## Running it
+## Running it locally
 
 ```bash
 npm install
@@ -28,6 +30,10 @@ npm run dev
 | `npm run typecheck` | Types only |
 | `npm run lint` | ESLint |
 | `npm run shoot` | Re-captures `docs/screenshots` at 1440 and 390 (needs `npm run dev` running) |
+
+Pushing to `main` rebuilds and redeploys the live site through
+`.github/workflows/pages.yml`. The build reads `BASE_PATH` so it can be served
+from a subpath; local dev stays at `/`.
 
 ## Where to look first
 
