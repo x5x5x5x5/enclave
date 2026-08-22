@@ -51,7 +51,7 @@ export function ChannelRow({
         <span className="flex shrink-0 items-center gap-1">
           {speaking ? <Waveform bars={3} size={10} /> : null}
           {channel.temporary ? (
-            <span className="text-ember" title="Temporary room">
+            <span className="text-low" title="Temporary room">
               <HourglassGlyph size={12} />
             </span>
           ) : null}
@@ -77,7 +77,7 @@ export function ChannelRow({
 
       {channel.temporary ? (
         <div className="px-8 pb-1">
-          <Countdown until={channel.temporary.expiresAt} prefix="closes in" />
+          <Countdown until={channel.temporary.expiresAt} prefix="closes in" tone="mid" />
         </div>
       ) : null}
 

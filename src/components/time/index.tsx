@@ -81,10 +81,12 @@ export function RetentionChip({
 }) {
   return (
     <Tooltip side="bottom" label={retentionSentence(retention)}>
+      {/* At rest this is a fact, not an alarm: neutral chip, ember only on the
+          ring that is actually depleting in view. */}
       <Chip
-        tone="ember"
+        tone="neutral"
         className={className}
-        icon={withGlyph ? <span className="text-ember">◔</span> : undefined}
+        icon={withGlyph ? <span className="text-low">◔</span> : undefined}
       >
         <span className="mono-num">{retentionLabel(retention)}</span>
       </Chip>
@@ -182,7 +184,7 @@ export function Horizon({ note }: { note?: string }) {
         className="pointer-events-none absolute inset-x-0 top-0 h-16"
         style={{
           background:
-            'linear-gradient(to bottom, rgb(var(--ember-rgb) / .10), rgb(var(--ember-rgb) / 0))',
+            'linear-gradient(to bottom, rgb(var(--ember-rgb) / .07), rgb(var(--ember-rgb) / 0))',
           maskImage: 'linear-gradient(to bottom, black, transparent)',
         }}
       />
@@ -190,14 +192,14 @@ export function Horizon({ note }: { note?: string }) {
         <span
           className="h-px flex-1"
           style={{
-            background: 'linear-gradient(to right, transparent, rgb(var(--ember-rgb) / .45))',
+            background: 'linear-gradient(to right, transparent, rgb(var(--ember-rgb) / .15))',
           }}
         />
         <span className="text-12 text-low">{note ?? 'Messages before this point have expired.'}</span>
         <span
           className="h-px flex-1"
           style={{
-            background: 'linear-gradient(to left, transparent, rgb(var(--ember-rgb) / .45))',
+            background: 'linear-gradient(to left, transparent, rgb(var(--ember-rgb) / .15))',
           }}
         />
       </div>

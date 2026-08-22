@@ -325,3 +325,61 @@ quietly loses its mistakes is not a checklist.
 27 routes × 4 viewports. Screenshot set covers the manifest at 360, 390, 430 and 1440, plus five
 mobile-only states: composer with the keyboard open, members sheet, profile edit with the lens
 active, mobile search, and the composer options sheet.
+
+---
+
+## P5 — Calm pass (colour discipline)
+
+Colour and light only; P4's layout was left alone and re-verified at the end.
+
+### The instrument had to be built before the work
+
+Both tests in the brief are objective, so they got an objective implementation:
+`scripts/audit-color.mjs` walks the rendered DOM at 1440 and 390 across 16 routes, converts every
+effective colour — background, text, border, SVG fill and stroke, shadow, gradient stop — to
+absolute chroma, weights it by the area it covers, and clusters it into 30° buckets.
+
+**It lied to me twice, and both lies are worth recording.**
+
+The first run said the interface was 54% coloured. It was counting the ink ramp: `#11151D` is 26%
+saturated in HSL and unmistakably grey on screen. HSL saturation is the wrong instrument for dark
+neutrals. Absolute chroma (max − min channel) puts ink at 0.05 and cove at 0.58, which is how the
+eye sorts them.
+
+The second run, immediately after the token rewrite, reported **0.04% coloured and zero hues on
+every screen**. I nearly wrote that down as a triumph. It was the parser: the palette had just
+moved to `oklch()` and `parse()` only matched `rgb()`, so the audit had gone blind to precisely the
+colours it exists to measure. The honest number, once it could see again, is 0.55%.
+
+### What actually changed
+
+The palette was never the problem — usage was. The eight hues moved to OKLCH at **L 0.70–0.74,
+C 0.020–0.065**, every one under the brief's 0.10 cap; cove went from minty neon (`#33C6B5`,
+chroma 0.58) to dusty teal (`#7db0a9`, chroma 0.20). The full-chroma originals survive as
+`--hue-*-vivid` and appear in exactly two places: the mask switcher and the onboarding hue picker.
+
+The sweep that mattered most was not the tokens, it was deleting colour that meant nothing:
+
+- **Usernames are ink.** Colour-coded names were the single largest source of hue in a message
+  stream, and they encoded nothing you could not read.
+- **MediaArt went monochrome.** Every attachment was painting two random mask hues; three images in
+  a row put six hues on screen. It is ink now, with a 5% accent wash.
+- **Hue rings only above 32px.** Identity is worth a ring where there is room to read one; in a
+  chat list it was 12 hues of noise.
+- **Retention chips at rest are neutral.** Amber is for a ring that is actually depleting.
+- **Community tiles, story rings, murmur, speaking pulses, badges, toasts, the social card
+  background** — all ink or a single muted hairline.
+
+### The states that colour was carrying alone
+
+Removing colour exposed three places where it had been doing the work by itself, so each got a
+non-colour carrier: own messages gained a "you" label, report selection gained a real checkbox, and
+the sanctioned rainbow moments moved to `-vivid` so they stay legible as *the* place hues live.
+
+### P5 gate
+
+Typecheck, lint and build clean. `npm run audit:color` passes the two-hue rule on all 32 viewports.
+`npm run audit:mobile` still passes all three P4 checks — no regression. Five grayscale captures in
+`docs/screenshots/grayscale-*` show the UI remains navigable with colour removed. No raw hex outside
+`tokens.css`. The only surviving gradient in the chrome is the Horizon; the only surviving glow is
+the focus ring.

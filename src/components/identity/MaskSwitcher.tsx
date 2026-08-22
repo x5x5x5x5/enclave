@@ -125,9 +125,11 @@ export function MaskSwitcher() {
                       <span className="mt-0.5 block truncate text-12 text-mid">{mask.bio}</span>
                     ) : null}
                     <span className="mt-1 flex items-center gap-2 text-12 text-low">
+                      {/* Sanctioned rainbow moment: the switcher is where hues
+                          are the subject, so it uses the full-chroma originals. */}
                       <span
                         className="h-2 w-2 rounded-full"
-                        style={{ background: `var(--hue-${mask.hue})` }}
+                        style={{ background: `var(--hue-${mask.hue}-vivid)` }}
                       />
                       {HUE_LABEL[mask.hue]}
                       <span aria-hidden="true">·</span>

@@ -86,7 +86,7 @@ export function StoryViewer() {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[70] flex h-[100dvh] items-center justify-center bg-[rgb(4_6_10/.92)] p-0 sm:p-6">
+      <div className="fixed inset-0 z-[70] flex h-[100dvh] items-center justify-center bg-[color:var(--scrim-story)] p-0 sm:p-6">
         <motion.div
           initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -98,7 +98,7 @@ export function StoryViewer() {
           <div className="absolute inset-x-3 z-20 flex gap-1"
             style={{ top: 'calc(12px + var(--safe-top))' }}>
             {items.map((s, i) => (
-              <span key={s.id} className="h-0.5 flex-1 overflow-hidden rounded-full bg-[rgb(255_255_255/.22)]">
+              <span key={s.id} className="h-0.5 flex-1 overflow-hidden rounded-full bg-[var(--line)]">
                 <span
                   className="block h-full rounded-full bg-hi"
                   style={{
@@ -117,7 +117,7 @@ export function StoryViewer() {
             <MaskAvatar maskId={author.id} size={30} presence={false} />
             <div className="min-w-0 flex-1">
               <p className="truncate text-13 text-hi">{author.displayName}</p>
-              <p className="mono-num truncate text-12 text-[rgb(255_255_255/.6)]">
+              <p className="mono-num truncate text-12 text-mid">
                 {shortStamp(current.postedAt)} · expires in {expiresIn}
               </p>
             </div>
@@ -133,17 +133,14 @@ export function StoryViewer() {
                 <MediaArt seed={current.art} rounded={false} />
               </div>
             ) : (
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: `radial-gradient(120% 80% at 30% 20%, rgb(var(--hue-${author.hue}-rgb) / .35), var(--ink-0))`,
-                }}
-              />
+              /* Ink ground. A text story used to wash the whole screen in the
+                 author's hue, which is the loudest thing colour can do. */
+              <div className="absolute inset-0 bg-ink-1" />
             )}
 
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-8 text-center">
               {tombstoned ? (
-                <p className="text-15 italic text-[rgb(255_255_255/.55)]">
+                <p className="text-15 italic text-low">
                   Story expired · it was view-once
                 </p>
               ) : (
@@ -179,11 +176,11 @@ export function StoryViewer() {
               onPointerUp={() => setPaused(false)}
             />
 
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-wrap items-center gap-2 bg-gradient-to-t from-[rgb(11_14_19/.85)] to-transparent px-3 pb-3 pt-10">
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-wrap items-center gap-2 bg-gradient-to-t from-[color:var(--scrim-strong)] to-transparent px-3 pb-3 pt-10">
               <Chip tone="accent">{current.audience.label}</Chip>
               {current.viewOnce ? <Chip tone="ember">view-once</Chip> : null}
               {current.seenBy ? (
-                <span className="mono-num ml-auto text-12 text-[rgb(255_255_255/.65)]">
+                <span className="mono-num ml-auto text-12 text-mid">
                   Seen by {current.seenBy}
                 </span>
               ) : null}
@@ -226,7 +223,7 @@ export function StoryViewer() {
             aria-label="Previous story"
             onClick={() => setIndex((i) => Math.max(0, i - 1))}
             className={cx(
-              'absolute left-1 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-[rgb(11_14_19/.6)] text-hi sm:flex',
+              'absolute left-1 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-[color:var(--scrim-soft)] text-hi sm:flex',
               index === 0 && 'opacity-30',
             )}
           >
@@ -236,7 +233,7 @@ export function StoryViewer() {
             aria-label="Next story"
             onClick={() => setIndex((i) => Math.min(items.length - 1, i + 1))}
             className={cx(
-              'absolute right-1 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-[rgb(11_14_19/.6)] text-hi sm:flex',
+              'absolute right-1 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-[color:var(--scrim-soft)] text-hi sm:flex',
               index === items.length - 1 && 'opacity-30',
             )}
           >

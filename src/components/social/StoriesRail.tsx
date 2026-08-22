@@ -25,9 +25,9 @@ export function StoryRing({
       style={{
         width: size,
         height: size,
-        background: seen
-          ? 'var(--line)'
-          : `conic-gradient(from 210deg, rgb(var(--hue-${hue}-rgb) / .25), var(--hue-${hue}), rgb(var(--hue-${hue}-rgb) / .25))`,
+        /* A 1.5px solid ring, not a conic gradient: one hue, one intensity. */
+        padding: 1.5,
+        background: seen ? 'var(--line)' : `rgb(var(--hue-${hue}-rgb) / 0.7)`,
       }}
     >
       <span className="flex h-full w-full items-center justify-center rounded-full bg-ink-1 p-[2px]">

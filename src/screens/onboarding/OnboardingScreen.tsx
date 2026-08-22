@@ -228,7 +228,8 @@ export function OnboardingScreen() {
                             'h-11 w-11 rounded-full transition-transform md:h-9 md:w-9',
                             hue === h ? 'scale-110 ring-2 ring-[color:var(--accent-glow)]' : '',
                           )}
-                          style={{ background: `var(--hue-${h})` }}
+                          /* Sanctioned rainbow moment: picking a hue. */
+                          style={{ background: `var(--hue-${h}-vivid)` }}
                         />
                       ))}
                     </div>

@@ -54,9 +54,16 @@ export function MaskAvatar({
           speaking && 'animate-[speak-pulse_1.1s_ease-in-out_infinite]',
         )}
         style={{
-          boxShadow: ring
-            ? `0 0 0 1.5px rgb(var(--hue-${m.hue}-rgb) / ${speaking ? 0.9 : 0.45})`
-            : undefined,
+          /*
+           * A hue ring is identity, not decoration, so it only appears where
+           * there is room to read it: 32px and up. In dense lists the ring is a
+           * neutral hairline, which is what keeps a chat list to two hues.
+           */
+          boxShadow: !ring
+            ? undefined
+            : size >= 32
+              ? `0 0 0 2px rgb(var(--hue-${m.hue}-rgb) / 0.7)`
+              : `0 0 0 1px var(--line)`,
         }}
       >
         <AvatarMark preset={m.avatar} hue={m.hue} size={size} />

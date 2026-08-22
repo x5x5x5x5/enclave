@@ -39,12 +39,8 @@ export function SpacesScreen() {
                 className="flex w-full items-start gap-3 text-left"
               >
                 <span
-                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-card border font-display text-13"
-                  style={{
-                    borderColor: `rgb(var(--hue-${c.hue}-rgb) / .4)`,
-                    background: `rgb(var(--hue-${c.hue}-rgb) / .12)`,
-                    color: `var(--hue-${c.hue})`,
-                  }}
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-card border bg-ink-2 font-display text-13 text-mid"
+                  style={{ borderColor: `rgb(var(--hue-${c.hue}-rgb) / 0.35)` }}
                 >
                   {c.icon}
                 </span>
@@ -66,7 +62,6 @@ export function SpacesScreen() {
                 <IdentityChip maskId={c.usingMaskId} prefix="here as" size="sm" />
                 <Murmur
                   intensity={demoMode ? Math.min(1, c.murmur + 0.1) : c.murmur}
-                  hue={c.hue}
                   width={40}
                 />
               </div>

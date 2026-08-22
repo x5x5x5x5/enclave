@@ -107,7 +107,7 @@ export function Sheet({
         <div className="fixed inset-0 z-50">
           <motion.button
             aria-label="Close"
-            className="absolute inset-0 bg-[rgb(4_6_10/.66)] backdrop-blur-[2px]"
+            className="absolute inset-0 bg-[color:var(--scrim)] backdrop-blur-[2px]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

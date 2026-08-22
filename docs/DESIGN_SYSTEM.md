@@ -70,6 +70,39 @@ itself turns grey and unremarkable.
 room gets a `--breach` banner: "This room isn't sealed. The host can read messages." Absence
 screams; presence whispers.
 
+### Colour discipline (P5)
+
+The palette was never the problem; usage was. Two objective tests define compliance, both
+automated in `scripts/audit-color.mjs` (`npm run audit:color`):
+
+1. **The grayscale test** — convert any screenshot to grayscale and the UI stays fully navigable.
+   Colour may add meaning; it may never carry it alone.
+2. **The two-hue rule** — any single viewport shows at most **two** non-neutral hues: the accent
+   plus at most one semantic. The only sanctioned rainbow moments in the product are the mask
+   switcher and the onboarding hue picker, which use `--hue-*-vivid`.
+
+**`--accent` may appear on exactly:** the single primary action of the current screen; focus rings
+and the caret; the active nav indicator and checked/selected states; links; the presence thread at
+50% opacity.
+
+**`--ember` may appear on exactly:** an `EmberRing` actively depleting in view; the dissolve
+animation and expired tombstone; the Horizon edge at ~15% fading to transparent; a message in the
+final ~10% of its life. **Retention chips at rest are neutral** — hairline, glyph, `--text-mid`.
+
+**`--breach` may appear on exactly:** the unsealed banner, destructive confirmations, failed
+transfers. Nothing else.
+
+**Other people's hues** appear only as a 2px ring at 70% on avatars **32px and larger**. In dense
+lists — chats home, member panel, message gutters — avatars get a neutral hairline and no hue.
+Usernames are always `--text-hi`; colour-coded names are Discord's noise and we do not inherit it.
+
+**Everything else is ink.** Borders, resting icons, headers, badges, cards, toasts.
+
+Rest-state hues are defined in OKLCH with chroma capped at **0.10** (L 0.70–0.74). `--accent-soft`
+is an 8% tint. `--accent-glow` survives only as the focus ring: no other glow, coloured shadow or
+gradient exists in the product, and the Horizon is the single permitted gradient. No raw hex lives
+outside `tokens.css`.
+
 ## 3. Typography
 
 Three roles, three faces. Type carries the personality — do not substitute defaults.

@@ -4,14 +4,15 @@ import { cx } from '../../lib/cx'
 import { useUi } from '../../state/ui'
 import type { ToastKind } from '../../state/ui'
 
+/* One neutral surface. The bar on the left carries the kind. */
 const tones: Record<ToastKind, string> = {
   neutral: 'border-[var(--line)] bg-ink-2',
-  accent: 'border-[color:var(--accent-line)] bg-ink-2',
+  accent: 'border-[var(--line)] bg-ink-2',
   breach: 'border-[color:var(--breach-glow)] bg-ink-2',
 }
 
 const bars: Record<ToastKind, string> = {
-  neutral: 'bg-[var(--text-low)]',
+  neutral: 'bg-[var(--line)]',
   accent: 'bg-accent',
   breach: 'bg-breach',
 }

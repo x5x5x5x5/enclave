@@ -98,24 +98,15 @@ export function Rail() {
                 className={cx(
                   'flex h-11 w-11 items-center justify-center rounded-card border font-display text-13 tracking-tight transition-[background-color,border-color,color] duration-[var(--dur-std)]',
                   isActive
-                    ? 'text-hi'
-                    : 'border-transparent bg-ink-1 text-mid hover:bg-ink-2 hover:text-hi',
+                    ? 'border-[color:var(--accent-line)] bg-accent-soft text-accent'
+                    : 'border-transparent bg-ink-1 text-mid hover:border-[var(--line)] hover:bg-ink-2 hover:text-hi',
                 )}
-                style={
-                  isActive
-                    ? {
-                        borderColor: `rgb(var(--hue-${c.hue}-rgb) / .5)`,
-                        background: `rgb(var(--hue-${c.hue}-rgb) / .12)`,
-                        color: `var(--hue-${c.hue})`,
-                      }
-                    : undefined
-                }
               >
                 <Tooltip side="right" label={`${c.name} · ${c.memberEstimate}`}>
                   {c.icon}
                 </Tooltip>
               </button>
-              <Murmur intensity={demoMode ? Math.min(1, c.murmur + 0.1) : c.murmur} hue={c.hue} />
+              <Murmur intensity={demoMode ? Math.min(1, c.murmur + 0.1) : c.murmur} />
             </div>
           )
         })}

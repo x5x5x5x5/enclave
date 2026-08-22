@@ -30,10 +30,14 @@ export function SocialCard() {
     if (!cardRef.current) return
     setBusy(true)
     try {
+      const canvas = getComputedStyle(document.documentElement)
+        .getPropertyValue('--ink-0')
+        .trim()
       const url = await toPng(cardRef.current, {
         pixelRatio: 2,
         cacheBust: true,
-        backgroundColor: '#0B0E13',
+        // Read the token rather than restating it; no hex lives in components.
+        backgroundColor: canvas || undefined,
       })
       const a = document.createElement('a')
       a.href = url
@@ -98,8 +102,10 @@ export function SocialCard() {
             data-mask-hue={spec.hue}
             className="relative w-[420px] max-w-full overflow-hidden rounded-modal border p-6"
             style={{
-              borderColor: `rgb(var(--hue-${spec.hue}-rgb) / .32)`,
-              background: `linear-gradient(150deg, rgb(var(--hue-${spec.hue}-rgb) / .14), var(--ink-1) 55%)`,
+              /* Ink ground with one muted hairline: the card is a document, not
+                 a poster. Template identity comes from the hairline and the type. */
+              borderColor: `rgb(var(--hue-${spec.hue}-rgb) / 0.4)`,
+              background: 'var(--ink-1)',
             }}
           >
             <div className="flex items-start justify-between gap-4">
@@ -107,7 +113,7 @@ export function SocialCard() {
                 <div className="flex items-center gap-3">
                   <span
                     className="rounded-full p-[2px]"
-                    style={{ background: `rgb(var(--hue-${spec.hue}-rgb) / .4)` }}
+                    style={{ background: `rgb(var(--hue-${spec.hue}-rgb) / 0.5)` }}
                   >
                     <AvatarMark preset={mask.avatar} hue={spec.hue} size={48} />
                   </span>

@@ -319,6 +319,33 @@ for (const { w, h, scale } of WIDTHS) {
   }
 }
 
+/*
+ * The grayscale proof. Colour must never be the only carrier of meaning, so the
+ * same screens are captured with the page desaturated; if a state is only
+ * legible in colour, it disappears here.
+ */
+const GRAYSCALE = ['02-chats-all', '03-raids-horizon', '04-unsealed-banner', '09-profile-audience-lens', '18-playground']
+let grays = 0
+for (const name of GRAYSCALE) {
+  const shot = SHOTS.find((x) => x.name === name)
+  if (!shot) continue
+  const page = await browser.newPage()
+  await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 })
+  await page.goto(BASE + shot.path, { waitUntil: 'networkidle0', timeout: 30000 })
+  await page.evaluate(() => document.fonts.ready)
+  await sleep(700)
+  if (shot.act) await shot.act(page)
+  await page.evaluate(() => {
+    document.documentElement.style.filter = 'grayscale(1)'
+  })
+  await sleep(300)
+  const file = join(OUT, `grayscale-${shot.name}@1440.png`)
+  await page.screenshot({ path: file })
+  console.log(`${file}`)
+  await page.close()
+  grays += 1
+}
+
 let extra = 0
 for (const shot of MOBILE_STATES) {
   const page = await browser.newPage()
@@ -347,4 +374,4 @@ try {
 } catch {
   /* already gone */
 }
-console.log(`\n${SHOTS.length * WIDTHS.length + extra} screenshots in ${OUT}`)
+console.log(`\n${SHOTS.length * WIDTHS.length + extra + grays} screenshots in ${OUT}`)

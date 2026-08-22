@@ -42,12 +42,8 @@ export function CommunityHome({ community }: { community: Community }) {
         <div className="mx-auto w-full max-w-3xl px-[var(--gutter)] py-8">
           <header>
             <div
-              className="mb-4 flex h-14 w-14 items-center justify-center rounded-modal border font-display text-17"
-              style={{
-                borderColor: `rgb(var(--hue-${community.hue}-rgb) / .4)`,
-                background: `rgb(var(--hue-${community.hue}-rgb) / .12)`,
-                color: `var(--hue-${community.hue})`,
-              }}
+              className="mb-4 flex h-14 w-14 items-center justify-center rounded-modal border bg-ink-2 font-display text-17 text-mid"
+              style={{ borderColor: `rgb(var(--hue-${community.hue}-rgb) / 0.35)` }}
             >
               {community.icon}
             </div>
@@ -57,12 +53,12 @@ export function CommunityHome({ community }: { community: Community }) {
             <div className="mt-4 flex flex-wrap items-center gap-2">
               <FuzzedCount value={`${community.memberEstimate} members`} />
               {community.gate ? (
-                <Chip tone="neutral" icon={<ZkGlyph size={11} />}>
+                <Chip icon={<ZkGlyph size={11} />}>
                   {community.gate.label}
                 </Chip>
               ) : null}
               {community.sealed ? (
-                <Chip tone="neutral" icon={<SealGlyph size={11} />}>
+                <Chip icon={<SealGlyph size={11} />}>
                   Sealed by default
                 </Chip>
               ) : null}
@@ -107,7 +103,7 @@ export function CommunityHome({ community }: { community: Community }) {
                           {maskById(post.by).displayName}
                         </span>
                         <span className="text-12 text-low">to #{channel.name}</span>
-                        <Chip tone="accent" icon={<CalendarClock size={11} strokeWidth={1.5} />}>
+                        <Chip icon={<CalendarClock size={11} strokeWidth={1.5} />}>
                           <span className="mono-num">{clock(post.at)}</span>
                         </Chip>
                       </div>
@@ -144,7 +140,7 @@ export function CommunityHome({ community }: { community: Community }) {
                     </div>
                     {c.temporary ? (
                       <div className="mt-1.5">
-                        <Countdown until={c.temporary.expiresAt} prefix="closes in" />
+                        <Countdown until={c.temporary.expiresAt} prefix="closes in" tone="mid" />
                       </div>
                     ) : null}
                     <div className="mt-2 flex min-h-6 flex-wrap items-center gap-1">

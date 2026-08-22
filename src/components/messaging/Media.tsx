@@ -43,7 +43,7 @@ function ImageTile({ media, message, tall }: { media: Media; message: Message; t
       {blurred ? (
         <button
           onClick={() => revealBlur(message.id)}
-          className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[rgb(11_14_19/.35)] text-center"
+          className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[color:var(--scrim-soft)] text-center"
         >
           <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--line)] bg-ink-1 text-mid">
             <Eye size={16} strokeWidth={1.5} />
@@ -55,7 +55,7 @@ function ImageTile({ media, message, tall }: { media: Media; message: Message; t
       {!blurred && viewOnce ? (
         <button
           onClick={() => openViewOnce(message.id)}
-          className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[rgb(11_14_19/.42)] text-center"
+          className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[color:var(--scrim-soft)] text-center"
         >
           <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[color:var(--ember-glow)] bg-ember-soft text-ember">
             <Eye size={16} strokeWidth={1.5} />
@@ -68,7 +68,7 @@ function ImageTile({ media, message, tall }: { media: Media; message: Message; t
       {!blurred && !viewOnce && message.viewOnce && openedViewOnce ? (
         <button
           onClick={() => expireViewOnce(message.id)}
-          className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-[rgb(11_14_19/.72)] px-2.5 py-1.5"
+          className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-[color:var(--scrim-strong)] px-2.5 py-1.5"
         >
           <span className="text-12 text-ember">Open — closing removes it</span>
           <span className="text-12 text-low">Close</span>
@@ -85,7 +85,7 @@ function ImageTile({ media, message, tall }: { media: Media; message: Message; t
           onContextMenu={(e) => e.preventDefault()}
           className={cx(
             'no-callout absolute inset-0 flex flex-col items-center justify-center gap-2 text-center transition-colors',
-            held ? 'bg-transparent' : 'bg-[rgb(11_14_19/.42)]',
+            held ? 'bg-transparent' : 'bg-[color:var(--scrim-soft)]',
           )}
         >
           {!held ? (
@@ -100,7 +100,7 @@ function ImageTile({ media, message, tall }: { media: Media; message: Message; t
       ) : null}
 
       {media.noDownload ? (
-        <Chip tone="neutral" className="absolute right-2 top-2 bg-[rgb(11_14_19/.7)]">
+        <Chip tone="neutral" className="absolute right-2 top-2 bg-[color:var(--scrim-strong)]">
           <EyeOff size={11} strokeWidth={1.5} /> View in app only
         </Chip>
       ) : null}
@@ -140,8 +140,8 @@ function VideoTile({ media, message }: { media: Media; message: Message }) {
           className={cx(
             'flex h-11 w-11 items-center justify-center rounded-full border backdrop-blur-sm transition-colors',
             left > 0
-              ? 'border-[var(--line)] bg-[rgb(11_14_19/.6)] text-hi'
-              : 'border-[color:var(--ember-glow)] bg-[rgb(11_14_19/.75)] text-ember',
+              ? 'border-[var(--line)] bg-[color:var(--scrim-soft)] text-hi'
+              : 'border-[color:var(--ember-glow)] bg-[color:var(--scrim-strong)] text-ember',
           )}
         >
           {playing ? <Pause size={17} strokeWidth={1.5} /> : <Play size={17} strokeWidth={1.5} />}
@@ -153,7 +153,7 @@ function VideoTile({ media, message }: { media: Media; message: Message }) {
             {mmss(left)} of {mmss(budget)} left
           </span>
         </Chip>
-        <span className="mono-num text-12 text-hi/80">{media.size}</span>
+        <span className="mono-num text-12 text-mid">{media.size}</span>
       </div>
       <div className="absolute inset-x-0 bottom-0 h-0.5 bg-[var(--line)]">
         <div

@@ -176,12 +176,9 @@ export function BadgeTile({
 }: {
   badge: SocialStats['reputation']['badges'][number]
 }) {
-  const tone =
-    badge.kind === 'seasonal'
-      ? { border: 'var(--ember-glow)', bg: 'var(--ember-soft)', text: 'var(--ember)' }
-      : badge.kind === 'secret'
-        ? { border: 'var(--line)', bg: 'var(--ink-2)', text: 'var(--text-low)' }
-        : { border: 'var(--accent-line)', bg: 'var(--accent-soft)', text: 'var(--accent)' }
+  /* Neutral tiles: the kind is already written under the name, so colour was
+     doing nothing the label was not already doing. */
+  const tone = { border: 'var(--line)', bg: 'var(--ink-2)', text: 'var(--text-mid)' }
 
   return (
     <div

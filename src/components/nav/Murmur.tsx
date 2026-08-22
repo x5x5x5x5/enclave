@@ -1,5 +1,4 @@
 import { cx } from '../../lib/cx'
-import type { Hue } from '../../mock/types'
 
 /**
  * Murmur replaces unread counts everywhere. A 3px shimmer under a space icon,
@@ -8,12 +7,10 @@ import type { Hue } from '../../mock/types'
  */
 export function Murmur({
   intensity,
-  hue,
   className,
   width = 20,
 }: {
   intensity: number
-  hue: Hue
   className?: string
   width?: number
 }) {
@@ -28,8 +25,9 @@ export function Murmur({
       className={cx('block h-[3px] rounded-full', className)}
       style={{
         width,
-        background: `linear-gradient(90deg, transparent, var(--hue-${hue}), transparent)`,
-        opacity,
+        /* Aliveness, not colour: the shimmer is ink so it never competes. */
+        background: 'var(--text-low)',
+        opacity: opacity * 0.8,
         animation: `murmur ${duration}s var(--ease) infinite`,
         transformOrigin: 'center',
       }}

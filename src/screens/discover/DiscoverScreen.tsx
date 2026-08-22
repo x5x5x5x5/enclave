@@ -134,12 +134,8 @@ export function DiscoverScreen() {
               <Card key={s.id} className="flex flex-col p-4">
                 <div className="flex items-start gap-3">
                   <span
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-card border font-display text-13"
-                    style={{
-                      borderColor: `rgb(var(--hue-${s.hue}-rgb) / .4)`,
-                      background: `rgb(var(--hue-${s.hue}-rgb) / .12)`,
-                      color: `var(--hue-${s.hue})`,
-                    }}
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-card border bg-ink-2 font-display text-13 text-mid"
+                    style={{ borderColor: `rgb(var(--hue-${s.hue}-rgb) / 0.35)` }}
                   >
                     {s.icon}
                   </span>

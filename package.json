@@ -10,7 +10,8 @@
     "typecheck": "tsc -b",
     "lint": "eslint .",
     "shoot": "node scripts/shoot.mjs",
-    "audit:mobile": "node scripts/audit-mobile.mjs"
+    "audit:mobile": "node scripts/audit-mobile.mjs",
+    "audit:color": "node scripts/audit-color.mjs"
   },
   "dependencies": {
     "@fontsource-variable/bricolage-grotesque": "^5.2.5",

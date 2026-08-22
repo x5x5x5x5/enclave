@@ -170,10 +170,7 @@ export function Composer({
         <div className="mb-2 flex items-start gap-2 rounded-card border border-[var(--line)] bg-ink-1 px-3 py-2">
           <CornerUpLeft size={14} strokeWidth={1.5} className="mt-0.5 shrink-0 text-low" />
           <div className="min-w-0 flex-1">
-            <p
-              className="text-12 font-medium"
-              style={{ color: `var(--hue-${maskById(quoting.authorMaskId).hue})` }}
-            >
+            <p className="text-12 font-medium text-mid">
               {maskById(quoting.authorMaskId).displayName}
             </p>
             <p className="truncate text-13 text-mid">{quoting.body ?? 'Attachment'}</p>

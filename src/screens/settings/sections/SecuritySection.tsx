@@ -50,8 +50,8 @@ export function SecuritySection() {
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-14 text-hi">{s.device}</span>
-                    {s.current ? <Chip tone="accent">this device</Chip> : null}
-                    {stale ? <Chip tone="ember">not seen in a while</Chip> : null}
+                    {s.current ? <Chip>this device</Chip> : null}
+                    {stale ? <Chip>not seen in a while</Chip> : null}
                     {isRevoked ? <Chip tone="breach">revoked</Chip> : null}
                   </div>
                   <p className="mt-0.5 text-12 text-low">

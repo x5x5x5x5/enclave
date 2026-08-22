@@ -102,12 +102,7 @@ export function ReportFlow() {
                 >
                   <div className="flex items-center gap-2">
                     <MaskAvatar maskId={author.id} size={22} presence={false} />
-                    <span
-                      className="text-13 font-medium"
-                      style={{ color: `var(--hue-${author.hue})` }}
-                    >
-                      {author.displayName}
-                    </span>
+                    <span className="text-13 font-medium text-hi">{author.displayName}</span>
                     <span className="mono-num text-12 text-low">{clock(m.ts)}</span>
                     <FrankingHash tag={m.frankingTag} full className="ml-auto" />
                   </div>

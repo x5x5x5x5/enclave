@@ -87,8 +87,10 @@ export function PresenceThread({ className }: { className?: string }) {
       aria-hidden="true"
       className={cx('h-px w-full shrink-0', className)}
       style={{
+        /* Half strength: felt, not read. */
         background:
           'linear-gradient(90deg, var(--accent-line), var(--accent) 22%, var(--accent-line) 60%, transparent)',
+        opacity: 0.5,
         transition: 'background var(--dur-mask) var(--ease)',
       }}
     />

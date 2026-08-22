@@ -66,13 +66,8 @@ function ReplyQuote({ replyToId }: { replyToId: string }) {
   if (!target) return null
   const author = maskById(target.authorMaskId)
   return (
-    <div className="mb-1 flex items-center gap-2 border-l-2 pl-2" style={{ borderColor: `var(--hue-${author.hue})` }}>
-      <span
-        className="shrink-0 text-12 font-medium"
-        style={{ color: `var(--hue-${author.hue})` }}
-      >
-        {author.displayName}
-      </span>
+    <div className="mb-1 flex items-center gap-2 border-l-2 border-[var(--line)] pl-2">
+      <span className="shrink-0 text-12 font-medium text-mid">{author.displayName}</span>
       <span className="min-w-0 truncate text-12 text-low">
         {target.body ?? (target.state === 'expired' ? 'expired message' : 'attachment')}
       </span>
@@ -339,12 +334,8 @@ export function StreamRow({
       <div className="min-w-0 flex-1">
         {!grouped ? (
           <div className="mb-0.5 flex items-baseline gap-2">
-            <span
-              className="text-13 font-semibold"
-              style={{ color: own ? 'var(--accent)' : `var(--hue-${author.hue})` }}
-            >
-              {author.displayName}
-            </span>
+            <span className="text-13 font-semibold text-hi">{author.displayName}</span>
+            {own ? <span className="text-12 text-low">you</span> : null}
             <MessageMeta message={message} />
           </div>
         ) : null}

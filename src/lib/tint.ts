@@ -15,27 +15,29 @@ import type { Hue } from '../mock/types'
    and honours reduced motion by snapping.
    ========================================================================== */
 
+/** Mirrors the OKLCH definitions in tokens.css, converted to sRGB. */
 export const HUE_RGB: Record<Hue, [number, number, number]> = {
-  cove: [51, 198, 181],
-  iris: [139, 124, 246],
-  saffron: [224, 172, 79],
-  rose: [226, 122, 151],
-  moss: [140, 190, 109],
-  sky: [88, 166, 232],
-  clay: [208, 138, 99],
-  fog: [143, 160, 179],
+  cove: [125, 176, 169],
+  iris: [154, 153, 198],
+  saffron: [191, 167, 124],
+  rose: [195, 146, 154],
+  moss: [148, 177, 142],
+  sky: [130, 166, 197],
+  clay: [192, 156, 132],
+  fog: [149, 160, 171],
 }
 
-/** Fog is deliberately quieter than the rest, at every stop. */
+/** Soft fills dropped to 8% in P5; the glow survives only as the focus ring. */
+const STOPS = { soft: 0.08, glow: 0.4, line: 0.22 }
 const ALPHA: Record<Hue, { soft: number; glow: number; line: number }> = {
-  cove: { soft: 0.12, glow: 0.4, line: 0.24 },
-  iris: { soft: 0.12, glow: 0.4, line: 0.24 },
-  saffron: { soft: 0.12, glow: 0.4, line: 0.24 },
-  rose: { soft: 0.12, glow: 0.4, line: 0.24 },
-  moss: { soft: 0.12, glow: 0.4, line: 0.24 },
-  sky: { soft: 0.12, glow: 0.4, line: 0.24 },
-  clay: { soft: 0.12, glow: 0.4, line: 0.24 },
-  fog: { soft: 0.1, glow: 0.32, line: 0.18 },
+  cove: STOPS,
+  iris: STOPS,
+  saffron: STOPS,
+  rose: STOPS,
+  moss: STOPS,
+  sky: STOPS,
+  clay: STOPS,
+  fog: STOPS,
 }
 
 const VARS = ['--accent', '--accent-soft', '--accent-glow', '--accent-line', '--accent-rgb'] as const

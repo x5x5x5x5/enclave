@@ -1,7 +1,6 @@
 import { BellOff, Pin } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import { cx } from '../../lib/cx'
-import { maskById } from '../../mock/masks'
 import type { ChatRow as ChatRowData } from '../../mock/types'
 import { MaskAvatar, MaskStack } from '../identity/MaskAvatar'
 import { EmberRing } from '../time'
@@ -86,7 +85,6 @@ export function ChatRow({ row, to, active }: { row: ChatRowData; to: string; act
         {row.murmur ? (
           <Murmur
             intensity={row.murmur}
-            hue={maskById(row.avatarMaskId).hue}
             width={28}
             className="mt-1"
           />

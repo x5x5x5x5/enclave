@@ -386,7 +386,7 @@ export function PlaygroundScreen() {
                 <div className="flex h-11 w-11 items-center justify-center rounded-card border border-[var(--line)] bg-ink-1 font-display text-13 text-mid">
                   LE
                 </div>
-                <Murmur intensity={i} hue="cove" />
+                <Murmur intensity={i} />
                 <span className="mono-num text-12 text-low">{i}</span>
               </div>
             ))}
