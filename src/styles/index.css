@@ -95,9 +95,16 @@
 
   h1, h2, h3 {
     font-family: var(--font-display);
-    font-weight: 650;
-    letter-spacing: -0.01em;
+    font-weight: 700;
+    letter-spacing: -0.022em;
     margin: 0;
+  }
+
+  /* Display type is the letterhead: tighter and heavier than body at the same
+     size, which is what separates it now that both use one family. */
+  .font-display {
+    font-weight: 700;
+    letter-spacing: -0.022em;
   }
 
   button, input, textarea, select {

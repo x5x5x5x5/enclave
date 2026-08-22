@@ -427,3 +427,27 @@ the switcher's sheet footer, above the safe area.
 **P6 gate:** typecheck, lint and build clean. `npm run audit:color` still passes the two-hue rule on
 all 32 viewports — imagery excluded, chrome unchanged. `npm run audit:mobile` still passes all three
 P4 checks. Full manifest re-shot at 360, 390, 430 and 1440.
+
+---
+
+## P7 — Type
+
+The design system named three faces and said not to substitute them, so rather than swap on my own
+taste I built a type lab behind `?font=` and captured the same screen — same content, same colour,
+same layout — in four pairings. The comparison is kept in `docs/typelab/` because the evidence is
+more useful than the conclusion.
+
+**Shipped: Plus Jakarta Sans for both display and body, Geist Mono unchanged.** It is the warmest of
+the candidates, has the high x-height that makes a dense chat list readable, and — most of the
+actual improvement — puts headings and body in *one* family. The previous pairing put a wide, quirky
+display face next to a neutral body face, and at a glance the product read as two designs sharing a
+window. Headings now separate themselves by weight (700) and tracking (−2.2%) instead, which is how
+Discord's gg sans does it.
+
+Bricolage Grotesque, Instrument Sans and the three losing candidates were uninstalled rather than
+left in `package.json`; the bundle carries one sans and one mono.
+
+*The tension worth naming:* the design system's anti-goals reject "Discord clone energy", and the
+brief asked for something more Discord-like. Plus Jakarta Sans is the resolution — friendlier and
+more contemporary than what was there, without the roundness that would tip it into the arcade. The
+club still reads as a club.

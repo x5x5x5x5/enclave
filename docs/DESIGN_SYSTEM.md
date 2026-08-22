@@ -116,9 +116,15 @@ Three roles, three faces. Type carries the personality — do not substitute def
 
 | Role | Face | Where |
 |---|---|---|
-| Display | **Bricolage Grotesque** (variable) | Community names, screen titles, onboarding headline, Social Card, empty states. Weight 600–700, tracking −1%. Used with restraint — it's the club's letterhead, not body text. |
-| UI / Body | **Instrument Sans** (variable) | Everything else. |
+| Display | **Plus Jakarta Sans** (variable, 700, tracking −2.2%) | Community names, screen titles, onboarding headline, Social Card, empty states. The letterhead voice comes from weight and tracking, not from a second typeface. |
+| UI / Body | **Plus Jakarta Sans** (variable, 400–600) | Everything else. |
 | Data | **Geist Mono** | Franking hashes, safety numbers, invite codes, timers, latency. Mono = "this is cryptographic material." |
+
+> **Revised in P7.** This section originally specified Bricolage Grotesque for display and
+> Instrument Sans for body, and said not to substitute them. Both were replaced on the client's
+> direction after comparing four pairings on the real interface (`docs/typelab/`). One family in two
+> weights reads as one product rather than two, which is how Discord's gg sans works and why the app
+> now looks intentional rather than assembled. The mono role is unchanged.
 
 Scale (px): 12, 13, 14, 15, 17, 20, 24, 30, 38.
 Chat body: 15/1.6 — Telegram's airiness. Channel & member lists: 13/1.4 — Discord's density. Both, deliberately.

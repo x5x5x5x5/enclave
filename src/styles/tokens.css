@@ -104,8 +104,11 @@
   --breach-glow: rgb(204 113 114 / 0.34);
 
   /* ---- Type ------------------------------------------------------------ */
-  --font-display: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
-  --font-ui: 'Instrument Sans Variable', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+  /* One family, two voices (P7). Headings separate themselves by weight and
+     tracking rather than by changing typeface — the way Discord does it, and
+     the reason the product now reads as one thing instead of two. */
+  --font-display: 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-ui: 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
 
   --fs-12: 0.75rem;
